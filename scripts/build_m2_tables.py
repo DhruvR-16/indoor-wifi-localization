@@ -6,8 +6,8 @@ Produces, under results/phase2/m2/:
 * ``m2_summary_metrics.csv`` - per arm, mean +/- std across folds and seeds,
   plus the pooled out-of-fold estimate per seed averaged over seeds.
 * ``m2_paired_comparison.csv`` - each arm against the reference arm on the
-  primary metric, paired on identical held-out rows, with a paired bootstrap
-  confidence interval.
+  primary metric, paired on identical held-out rows, with a USERID-clustered
+  bootstrap confidence interval.
 
 Pairing is row-level: arms are only compared where they predicted the same
 (fold, row index) under the same seed, which the A4/A7 design guarantees.
@@ -172,7 +172,7 @@ def _row_level_primary(path: Path) -> pd.DataFrame:
     frame["evaal_row"] = (
         frame["position_error"] + 50.0 * building_wrong + 4.0 * floor_wrong
     )
-    return frame[["index", "evaal_row", "position_error"]]
+    return frame[["index", "USERID", "evaal_row", "position_error"]]
 
 
 def paired_comparison(
@@ -181,7 +181,17 @@ def paired_comparison(
     n_boot: int = 1000,
     seed: int = 42,
 ) -> pd.DataFrame:
-    """Paired per-row difference vs the reference arm, bootstrapped over rows."""
+    """Paired difference vs the reference arm, with a user-clustered bootstrap.
+
+    Two levels of correlation make a row-level iid bootstrap wrong here: rows
+    predicted by one model are not independent of each other, and the same
+    physical scan reappears under every seed. So the per-row difference is
+    first averaged over seeds, leaving one value per scan, and the bootstrap
+    then resamples whole held-out USERIDs with replacement - the users are the
+    independent replicates of this design. The run-level mean and standard
+    deviation over (fold, seed) runs are reported alongside, since that is the
+    spread a reader of the summary table sees.
+    """
     index = {
         (r["exp_id"], r["fold"], r["seed"]): Path(r["predictions_file"])
         for r in records
@@ -194,47 +204,70 @@ def paired_comparison(
     rows = []
     arms = sorted({k[0] for k in index} - {reference})
     for arm in arms:
-        diffs, pos_diffs = [], []
-        pairs = 0
+        per_run, frames = [], []
         for _, fold, run_seed in sorted(reference_keys, key=lambda k: (k[1], k[2])):
             arm_key = (arm, fold, run_seed)
             if arm_key not in index:
                 continue
             ref_rows = _row_level_primary(index[(reference, fold, run_seed)])
             arm_rows = _row_level_primary(index[arm_key])
-            merged = ref_rows.merge(arm_rows, on="index", suffixes=("_ref", "_arm"))
+            merged = ref_rows.merge(
+                arm_rows, on=["index", "USERID"], suffixes=("_ref", "_arm")
+            )
             if len(merged) != len(ref_rows):
                 raise AssertionError(
                     f"{arm} and {reference} do not cover identical rows on fold {fold} "
                     f"seed {run_seed}; refusing to compare unmatched rows."
                 )
-            diffs.append((merged["evaal_row_arm"] - merged["evaal_row_ref"]).to_numpy())
-            pos_diffs.append(
-                (merged["position_error_arm"] - merged["position_error_ref"]).to_numpy()
+            merged["delta_evaal"] = merged["evaal_row_arm"] - merged["evaal_row_ref"]
+            merged["delta_position_error"] = (
+                merged["position_error_arm"] - merged["position_error_ref"]
             )
-            pairs += 1
-        if not diffs:
+            merged["fold"] = fold
+            frames.append(
+                merged[
+                    ["fold", "index", "USERID", "delta_evaal", "delta_position_error"]
+                ]
+            )
+            per_run.append(float(merged["delta_evaal"].mean()))
+        if not frames:
             continue
 
-        paired = np.concatenate(diffs)
-        paired_pos = np.concatenate(pos_diffs)
-        boot = np.array(
-            [
-                paired[rng.integers(0, len(paired), len(paired))].mean()
-                for _ in range(n_boot)
-            ]
+        pooled = pd.concat(frames, ignore_index=True)
+        # One value per physical scan: average the seeds, which are repeats of it.
+        per_scan = pooled.groupby(["fold", "index"], as_index=False).agg(
+            USERID=("USERID", "first"),
+            delta_evaal=("delta_evaal", "mean"),
+            delta_position_error=("delta_position_error", "mean"),
         )
+        by_user = {
+            user: group["delta_evaal"].to_numpy()
+            for user, group in per_scan.groupby("USERID")
+        }
+        users = np.array(sorted(by_user))
+        boot = np.empty(n_boot)
+        for draw in range(n_boot):
+            picked = rng.choice(users, size=len(users), replace=True)
+            boot[draw] = np.concatenate([by_user[u] for u in picked]).mean()
         low, high = np.percentile(boot, [2.5, 97.5])
+
         rows.append(
             {
                 "exp_id": arm,
                 "reference": reference,
-                "paired_runs": pairs,
-                "paired_rows": len(paired),
-                "delta_evaal_mean": paired.mean(),
-                "delta_evaal_ci_low": low,
-                "delta_evaal_ci_high": high,
-                "delta_mean_position_error": paired_pos.mean(),
+                "paired_runs": len(per_run),
+                "paired_scans": len(per_scan),
+                "clusters_userid": len(users),
+                "delta_evaal_mean": float(per_scan["delta_evaal"].mean()),
+                "delta_evaal_ci_low": float(low),
+                "delta_evaal_ci_high": float(high),
+                "delta_evaal_run_mean": float(np.mean(per_run)),
+                "delta_evaal_run_std": (
+                    float(np.std(per_run, ddof=1)) if len(per_run) > 1 else float("nan")
+                ),
+                "delta_mean_position_error": float(
+                    per_scan["delta_position_error"].mean()
+                ),
                 "improves_reference": bool(high < 0.0),
                 "degrades_reference": bool(low > 0.0),
             }
@@ -285,8 +318,8 @@ def main() -> None:
         )
     if not comparison.empty:
         print(
-            f"\nPaired row-level comparison vs {args.reference} "
-            f"(negative = better, 95% bootstrap CI):"
+            f"\nPaired comparison vs {args.reference} (negative = better, "
+            f"95% CI from a USERID-clustered bootstrap):"
         )
         for _, row in comparison.iterrows():
             verdict = (
@@ -297,7 +330,9 @@ def main() -> None:
             print(
                 f"  {row['exp_id']:<22} dEvAAL {row['delta_evaal_mean']:+6.2f} m "
                 f"[{row['delta_evaal_ci_low']:+6.2f}, {row['delta_evaal_ci_high']:+6.2f}] "
-                f"on {row['paired_rows']:>6} rows -> {verdict}"
+                f"| per-run {row['delta_evaal_run_mean']:+6.2f} +/- "
+                f"{row['delta_evaal_run_std']:4.2f} m "
+                f"| {row['clusters_userid']} users -> {verdict}"
             )
     print(f"\nWrote tables to {results_dir}")
 

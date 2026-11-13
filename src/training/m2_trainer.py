@@ -13,6 +13,7 @@ outer-training users.
 
 from __future__ import annotations
 
+import gc
 import json
 import platform
 from dataclasses import asdict, dataclass, field
@@ -263,6 +264,21 @@ def train_fold_models(config: M2TrainConfig) -> FoldTraining:
     )
 
 
+def release_accelerator_memory() -> None:
+    """Drop cached accelerator memory so a long sweep does not accumulate it.
+
+    A single process running dozens of runs on MPS degrades badly - observed
+    per-run time rose from ~35 s to ~1400 s after 40 runs - because freed
+    tensors stay in the allocator cache while the machine starts swapping.
+    Numerics are unaffected.
+    """
+    gc.collect()
+    if torch.backends.mps.is_available():
+        torch.mps.empty_cache()
+    elif torch.cuda.is_available():
+        torch.cuda.empty_cache()
+
+
 def run_m2_fold(
     config: M2TrainConfig,
     results_dir: Path | str = "results/phase2/m2",
@@ -326,4 +342,5 @@ def run_m2_fold(
     with open(results_dir / "records" / f"record_{run_name}.json", "w") as f:
         json.dump(record, f, indent=2)
 
+    release_accelerator_memory()
     return record
