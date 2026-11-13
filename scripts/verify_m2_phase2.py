@@ -263,6 +263,53 @@ def verify_dae_checkpoints(audit: Audit, dae_dir: Path) -> None:
     )
 
 
+def verify_protocol_identical_arms(audit: Audit, records: list[dict]) -> None:
+    """a7_random_init and a4_linear differ in name only, so they must agree.
+
+    Both are the linear-positive view on a randomly initialised 520-256-128
+    trunk with the same optimiser, stopping rule, folds and seeds. A mismatch
+    would mean the A7 runner does not share the A4 protocol, which would make
+    the pretraining comparison meaningless.
+    """
+    print("\n[7] Protocol-identical arms agree")
+    by_key = {
+        (r["exp_id"], r["fold"], r["seed"]): r
+        for r in records
+        if r["exp_id"] in ("a4_linear", "a7_random_init")
+    }
+    pairs = [
+        (by_key[("a4_linear", fold, seed)], by_key[("a7_random_init", fold, seed)])
+        for (exp_id, fold, seed) in by_key
+        if exp_id == "a4_linear" and ("a7_random_init", fold, seed) in by_key
+    ]
+    if not pairs:
+        print("  SKIP  no overlapping a4_linear / a7_random_init runs yet")
+        return
+
+    mismatched = []
+    for reference, pretrain_arm in pairs:
+        same_epoch = reference["best_epoch"] == pretrain_arm["best_epoch"]
+        same_score = (
+            abs(
+                reference["metrics"]["evaal_style_score"]
+                - pretrain_arm["metrics"]["evaal_style_score"]
+            )
+            < 1e-9
+        )
+        if not (same_epoch and same_score):
+            mismatched.append(
+                f"f{reference['fold']}s{reference['seed']}: "
+                f"E* {reference['best_epoch']}/{pretrain_arm['best_epoch']}, "
+                f"EvAAL {reference['metrics']['evaal_style_score']:.4f}/"
+                f"{pretrain_arm['metrics']['evaal_style_score']:.4f}"
+            )
+    audit.check(
+        not mismatched,
+        f"a7_random_init reproduces a4_linear on all {len(pairs)} shared runs",
+        "; ".join(mismatched[:3]),
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--results-dir", default=str(RESULTS_DIR))
@@ -279,6 +326,7 @@ def main() -> int:
     verify_predictions(audit, records, train_df)
     verify_pooled_coverage(audit, records)
     verify_dae_checkpoints(audit, results_dir / "dae")
+    verify_protocol_identical_arms(audit, records)
 
     print(f"\n{len(audit.passed)} checks passed, {len(audit.failed)} failed")
     for failure in audit.failed:

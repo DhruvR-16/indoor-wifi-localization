@@ -39,6 +39,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from src.data.load import MISSING_RSSI  # noqa: E402
 from src.data.phase2 import AugmentdBm  # noqa: E402
 from src.data.phase2_m2 import load_m2_fold_data, make_inner_split  # noqa: E402
 from src.features.rssi_representations import RepresentationSpec  # noqa: E402
@@ -118,7 +119,7 @@ def train_one_dae(
     raw_train = train_ds.raw_features[inner_train_idx]
     raw_val = train_ds.raw_features[inner_val_idx]
     clean_val = torch.from_numpy(spec(raw_val))
-    val_observed = torch.from_numpy(raw_val != float(AugmentdBm().missing_sentinel))
+    val_observed = torch.from_numpy(raw_val != float(MISSING_RSSI))
 
     corrupter = AugmentdBm(
         noise_sigma=dae_cfg["corrupt_noise_sigma"],
@@ -147,7 +148,7 @@ def train_one_dae(
         corrupted_raw = np.stack([corrupter(row.copy(), rng) for row in raw_train])
         inputs = torch.from_numpy(spec(corrupted_raw))
         targets = torch.from_numpy(spec(raw_train))
-        observed = torch.from_numpy(raw_train != float(corrupter.missing_sentinel))
+        observed = torch.from_numpy(raw_train != float(MISSING_RSSI))
 
         order = np.random.default_rng(seed + epoch).permutation(len(inputs))
         epoch_obs = epoch_miss = epoch_total = 0.0
