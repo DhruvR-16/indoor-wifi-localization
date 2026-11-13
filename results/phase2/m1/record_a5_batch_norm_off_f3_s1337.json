@@ -1,0 +1,188 @@
+{
+  "exp_id": "a5_batch_norm_off",
+  "fold": 3,
+  "seed": 1337,
+  "best_epoch": 20,
+  "best_inner_evaal": 22.114521647655245,
+  "final_train_loss": 0.035511271529850154,
+  "final_val_loss": 4.498322147639247,
+  "metrics": {
+    "n_samples": 3763,
+    "building_accuracy": 0.905394631942599,
+    "floor_accuracy": 0.5612543183630082,
+    "floor_accuracy_given_correct_building": 0.5934840035221602,
+    "mae_longitude": 12.986062107192453,
+    "mae_latitude": 12.426698254975493,
+    "mean_position_error": 20.197078476080918,
+    "median_position_error": 16.07717158647997,
+    "p75_position_error": 26.874401436706364,
+    "p95_position_error": 50.7224991250153,
+    "building_wrong_share": 0.09460536805740101,
+    "building_wrong_mean_position_error": 35.801252626782656,
+    "building_right_floor_wrong_share": 0.3680574010098326,
+    "building_right_floor_wrong_mean_position_error": 20.9936091214997,
+    "building_and_floor_right_share": 0.5373372309327664,
+    "building_and_floor_right_mean_position_error": 16.904160107359438,
+    "evaal_style_score": 26.682329605498936,
+    "building_macro_f1": 0.9038758822195625,
+    "floor_macro_f1": 0.4542063078173172
+  },
+  "config": {
+    "exp_id": "a5_batch_norm_off",
+    "fold": 3,
+    "seed": 1337,
+    "dropout": 0.2,
+    "batch_norm": false,
+    "weight_decay": 0.0,
+    "lr": 0.001,
+    "batch_size": 64,
+    "max_epochs": 20,
+    "patience": 6,
+    "noise_sigma": 0.0,
+    "ap_dropout": 0.0,
+    "include_missing_mask": false,
+    "device": "mps",
+    "loss_weights": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "software": {
+    "torch": "2.5.1",
+    "sklearn": "1.8.0",
+    "python": "3.12.5",
+    "device": "mps"
+  },
+  "meta": {
+    "fold": 3,
+    "train_rows": 15537,
+    "valid_rows": 3763,
+    "train_users": [
+      1,
+      2,
+      4,
+      5,
+      6,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "valid_users": [
+      3,
+      7,
+      16,
+      17,
+      18
+    ],
+    "input_dim": 520
+  },
+  "epoch_curves": [
+    {
+      "epoch": 1,
+      "train_loss": 1.0179547156694004,
+      "val_loss": 2.0433473049078956
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.14735543569971504,
+      "val_loss": 3.3477717276220607
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.09510909115949286,
+      "val_loss": 3.638632284840411
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.07892989063704456,
+      "val_loss": 3.0807447040421985
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.06834901361860365,
+      "val_loss": 3.842817574581605
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.05998067274965622,
+      "val_loss": 4.078405779012937
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.05715974267004939,
+      "val_loss": 4.007458020269997
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.05477355799250642,
+      "val_loss": 4.146335171590859
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.050271445203097266,
+      "val_loss": 4.045057098160229
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.047937747957223234,
+      "val_loss": 4.516193040275662
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.04549474144208824,
+      "val_loss": 4.5458624322141
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.04421838861985952,
+      "val_loss": 4.30207539493439
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.04283962371939249,
+      "val_loss": 4.110684650397654
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.03979307192726513,
+      "val_loss": 4.674030199757445
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.0410129754830903,
+      "val_loss": 3.9436705850412026
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.03948464072903488,
+      "val_loss": 4.522381943224345
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.03584527482619747,
+      "val_loss": 4.169855571407194
+    },
+    {
+      "epoch": 18,
+      "train_loss": 0.03806369828727142,
+      "val_loss": 4.194930928262045
+    },
+    {
+      "epoch": 19,
+      "train_loss": 0.03585760849968764,
+      "val_loss": 3.9286323302914785
+    },
+    {
+      "epoch": 20,
+      "train_loss": 0.035511271529850154,
+      "val_loss": 4.498322147639247
+    }
+  ],
+  "predictions_file": "/Users/kavyajain/Desktop/aml/results/phase2/m1/preds_a5_batch_norm_off_f3_s1337.csv"
+}

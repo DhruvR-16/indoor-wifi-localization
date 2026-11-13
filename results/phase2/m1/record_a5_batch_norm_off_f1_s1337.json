@@ -1,0 +1,133 @@
+{
+  "exp_id": "a5_batch_norm_off",
+  "fold": 1,
+  "seed": 1337,
+  "best_epoch": 9,
+  "best_inner_evaal": 136.98651888860473,
+  "final_train_loss": 0.04748992675657922,
+  "final_val_loss": 0.7550138675918182,
+  "metrics": {
+    "n_samples": 3615,
+    "building_accuracy": 0.991701244813278,
+    "floor_accuracy": 0.8586445366528354,
+    "floor_accuracy_given_correct_building": 0.8658298465829847,
+    "mae_longitude": 20.939017451980057,
+    "mae_latitude": 13.340952655297407,
+    "mean_position_error": 26.17848412224986,
+    "median_position_error": 20.8584993486141,
+    "p75_position_error": 34.467959180444765,
+    "p95_position_error": 62.84890790400483,
+    "building_wrong_share": 0.008298755186721992,
+    "building_wrong_mean_position_error": 137.20855580514493,
+    "building_right_floor_wrong_share": 0.1330567081604426,
+    "building_right_floor_wrong_mean_position_error": 24.30648684510644,
+    "building_and_floor_right_share": 0.8586445366528354,
+    "building_and_floor_right_mean_position_error": 25.395471409562724,
+    "evaal_style_score": 27.158843734974617,
+    "building_macro_f1": 0.9742071856848417,
+    "floor_macro_f1": 0.851623090269761
+  },
+  "config": {
+    "exp_id": "a5_batch_norm_off",
+    "fold": 1,
+    "seed": 1337,
+    "dropout": 0.2,
+    "batch_norm": false,
+    "weight_decay": 0.0,
+    "lr": 0.001,
+    "batch_size": 64,
+    "max_epochs": 20,
+    "patience": 6,
+    "noise_sigma": 0.0,
+    "ap_dropout": 0.0,
+    "include_missing_mask": false,
+    "device": "mps",
+    "loss_weights": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "software": {
+    "torch": "2.5.1",
+    "sklearn": "1.8.0",
+    "python": "3.12.5",
+    "device": "mps"
+  },
+  "meta": {
+    "fold": 1,
+    "train_rows": 15685,
+    "valid_rows": 3615,
+    "train_users": [
+      2,
+      3,
+      5,
+      6,
+      7,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "valid_users": [
+      1,
+      4,
+      8
+    ],
+    "input_dim": 520
+  },
+  "epoch_curves": [
+    {
+      "epoch": 1,
+      "train_loss": 0.9978176266318415,
+      "val_loss": 0.556700027041268
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.15007778470654312,
+      "val_loss": 0.5036717096441671
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.09673381770953415,
+      "val_loss": 0.5805736850097514
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.07725507825067858,
+      "val_loss": 0.5638309074075598
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.0692381566784125,
+      "val_loss": 0.5299543877900169
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.059565316211825946,
+      "val_loss": 0.6337870939128232
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.051992150455168105,
+      "val_loss": 0.6082107359380052
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.04888833025697528,
+      "val_loss": 0.5865753250882814
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.04748992675657922,
+      "val_loss": 0.7550138675918182
+    }
+  ],
+  "predictions_file": "/Users/kavyajain/Desktop/aml/results/phase2/m1/preds_a5_batch_norm_off_f1_s1337.csv"
+}

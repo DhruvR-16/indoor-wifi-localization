@@ -1,0 +1,173 @@
+{
+  "exp_id": "baseline",
+  "fold": 4,
+  "seed": 2024,
+  "best_epoch": 17,
+  "best_inner_evaal": 18.622862655253975,
+  "final_train_loss": 0.0490633608895994,
+  "final_val_loss": 2.2181712456125147,
+  "metrics": {
+    "n_samples": 3786,
+    "building_accuracy": 0.977284733227681,
+    "floor_accuracy": 0.8074484944532488,
+    "floor_accuracy_given_correct_building": 0.8032432432432433,
+    "mae_longitude": 10.758890250462203,
+    "mae_latitude": 8.44561223640602,
+    "mean_position_error": 15.114311140537646,
+    "median_position_error": 12.960923247861954,
+    "p75_position_error": 20.077836737314065,
+    "p95_position_error": 35.12053277384062,
+    "building_wrong_share": 0.02271526677231907,
+    "building_wrong_mean_position_error": 22.225411879548236,
+    "building_right_floor_wrong_share": 0.19228737453777073,
+    "building_right_floor_wrong_mean_position_error": 17.640610939963924,
+    "building_and_floor_right_share": 0.7849973586899102,
+    "building_and_floor_right_mean_position_error": 14.2897146003165,
+    "evaal_style_score": 17.020280501340604,
+    "building_macro_f1": 0.9759560397752246,
+    "floor_macro_f1": 0.8243197290494532
+  },
+  "config": {
+    "exp_id": "baseline",
+    "fold": 4,
+    "seed": 2024,
+    "dropout": 0.2,
+    "batch_norm": true,
+    "weight_decay": 0.0,
+    "lr": 0.001,
+    "batch_size": 64,
+    "max_epochs": 20,
+    "patience": 6,
+    "noise_sigma": 0.0,
+    "ap_dropout": 0.0,
+    "include_missing_mask": false,
+    "device": "mps",
+    "loss_weights": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "software": {
+    "torch": "2.5.1",
+    "sklearn": "1.8.0",
+    "python": "3.12.5",
+    "device": "mps"
+  },
+  "meta": {
+    "fold": 4,
+    "train_rows": 15514,
+    "valid_rows": 3786,
+    "train_users": [
+      1,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      11,
+      12,
+      14,
+      16,
+      17,
+      18
+    ],
+    "valid_users": [
+      2,
+      9,
+      10,
+      13,
+      15
+    ],
+    "input_dim": 520
+  },
+  "epoch_curves": [
+    {
+      "epoch": 1,
+      "train_loss": 0.4793817112413944,
+      "val_loss": 1.1111957986528676
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.12432069290015432,
+      "val_loss": 1.305324539449066
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.09342195680786552,
+      "val_loss": 1.453453927549223
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.08892448405915326,
+      "val_loss": 1.578375722343723
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.07533209098679293,
+      "val_loss": 1.591645742029262
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.06909245520124956,
+      "val_loss": 1.8689917216155056
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.0705528574547282,
+      "val_loss": 1.6843687308952213
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.06717933240680048,
+      "val_loss": 1.9903681352967397
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.06198069641803518,
+      "val_loss": 1.9276366111667207
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.06332588380532254,
+      "val_loss": 2.1482985601450006
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.05799479919022003,
+      "val_loss": 2.1856627648541083
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.05750503589556296,
+      "val_loss": 1.9074758228225013
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.05392486216508067,
+      "val_loss": 1.957368478559268
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.05308826567428838,
+      "val_loss": 2.1666051800285158
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.05614211461640925,
+      "val_loss": 1.9782602714685102
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.04975298916300138,
+      "val_loss": 1.897989268026625
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.0490633608895994,
+      "val_loss": 2.2181712456125147
+    }
+  ],
+  "predictions_file": "/Users/kavyajain/Desktop/aml/results/phase2/m1/preds_baseline_f4_s2024.csv"
+}

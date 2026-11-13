@@ -1,0 +1,173 @@
+{
+  "exp_id": "a5_batch_norm_off",
+  "fold": 4,
+  "seed": 2024,
+  "best_epoch": 17,
+  "best_inner_evaal": 19.836746051284827,
+  "final_train_loss": 0.0435665816206623,
+  "final_val_loss": 1.0194208201641837,
+  "metrics": {
+    "n_samples": 3786,
+    "building_accuracy": 0.9300052826201796,
+    "floor_accuracy": 0.8578975171685156,
+    "floor_accuracy_given_correct_building": 0.856290826469753,
+    "mae_longitude": 10.121901556419001,
+    "mae_latitude": 7.806348275713282,
+    "mean_position_error": 14.181142698192911,
+    "median_position_error": 12.27839156313081,
+    "p75_position_error": 18.53246665962718,
+    "p95_position_error": 31.136039911392043,
+    "building_wrong_share": 0.0699947173798204,
+    "building_wrong_mean_position_error": 16.524437795752704,
+    "building_right_floor_wrong_share": 0.13365029054410987,
+    "building_right_floor_wrong_mean_position_error": 15.861759186208193,
+    "building_and_floor_right_share": 0.7963549920760697,
+    "building_and_floor_right_mean_position_error": 13.693127725128537,
+    "evaal_style_score": 18.249288498509866,
+    "building_macro_f1": 0.9239415254375415,
+    "floor_macro_f1": 0.8646966775400301
+  },
+  "config": {
+    "exp_id": "a5_batch_norm_off",
+    "fold": 4,
+    "seed": 2024,
+    "dropout": 0.2,
+    "batch_norm": false,
+    "weight_decay": 0.0,
+    "lr": 0.001,
+    "batch_size": 64,
+    "max_epochs": 20,
+    "patience": 6,
+    "noise_sigma": 0.0,
+    "ap_dropout": 0.0,
+    "include_missing_mask": false,
+    "device": "mps",
+    "loss_weights": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "software": {
+    "torch": "2.5.1",
+    "sklearn": "1.8.0",
+    "python": "3.12.5",
+    "device": "mps"
+  },
+  "meta": {
+    "fold": 4,
+    "train_rows": 15514,
+    "valid_rows": 3786,
+    "train_users": [
+      1,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      11,
+      12,
+      14,
+      16,
+      17,
+      18
+    ],
+    "valid_users": [
+      2,
+      9,
+      10,
+      13,
+      15
+    ],
+    "input_dim": 520
+  },
+  "epoch_curves": [
+    {
+      "epoch": 1,
+      "train_loss": 1.1029044241326336,
+      "val_loss": 0.562510323524475
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.15686380568845773,
+      "val_loss": 0.5382547268954416
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.10166773207700301,
+      "val_loss": 0.6815782325652738
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.08569593468504678,
+      "val_loss": 0.7807003901495287
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.07275096130070617,
+      "val_loss": 0.7832752956775948
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.0689043417082402,
+      "val_loss": 0.7686853323830292
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.06082944261531035,
+      "val_loss": 0.8077834954718128
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.059699676386674734,
+      "val_loss": 0.8473093393413971
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.0551956425739046,
+      "val_loss": 0.8765076549413303
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.05174288685613699,
+      "val_loss": 0.9130775349680335
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.05263032689843894,
+      "val_loss": 0.8703842402203008
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.05032315565112196,
+      "val_loss": 1.0320769054039072
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.046295715810217485,
+      "val_loss": 0.9294255237172668
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.047572870949597515,
+      "val_loss": 0.9708924518354858
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.04564577008409755,
+      "val_loss": 0.972876226149189
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.04258191058941094,
+      "val_loss": 1.1069253887437904
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.0435665816206623,
+      "val_loss": 1.0194208201641837
+    }
+  ],
+  "predictions_file": "/Users/kavyajain/Desktop/aml/results/phase2/m1/preds_a5_batch_norm_off_f4_s2024.csv"
+}

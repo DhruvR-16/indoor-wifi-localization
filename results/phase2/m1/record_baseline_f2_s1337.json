@@ -1,0 +1,178 @@
+{
+  "exp_id": "baseline",
+  "fold": 2,
+  "seed": 1337,
+  "best_epoch": 18,
+  "best_inner_evaal": 30.916284584277914,
+  "final_train_loss": 0.05284116280322172,
+  "final_val_loss": 0.5238742059456152,
+  "metrics": {
+    "n_samples": 3620,
+    "building_accuracy": 1.0,
+    "floor_accuracy": 0.8875690607734806,
+    "floor_accuracy_given_correct_building": 0.8875690607734806,
+    "mae_longitude": 11.20257895194481,
+    "mae_latitude": 7.450711698556134,
+    "mean_position_error": 14.707512760927827,
+    "median_position_error": 10.965143557694724,
+    "p75_position_error": 19.627840194036068,
+    "p95_position_error": 39.39203000161677,
+    "building_wrong_share": 0.0,
+    "building_wrong_mean_position_error": NaN,
+    "building_right_floor_wrong_share": 0.11243093922651934,
+    "building_right_floor_wrong_mean_position_error": 25.61002558317054,
+    "building_and_floor_right_share": 0.8875690607734806,
+    "building_and_floor_right_mean_position_error": 13.326459938440188,
+    "evaal_style_score": 15.157236517833903,
+    "building_macro_f1": 1.0,
+    "floor_macro_f1": 0.8668851893480202
+  },
+  "config": {
+    "exp_id": "baseline",
+    "fold": 2,
+    "seed": 1337,
+    "dropout": 0.2,
+    "batch_norm": true,
+    "weight_decay": 0.0,
+    "lr": 0.001,
+    "batch_size": 64,
+    "max_epochs": 20,
+    "patience": 6,
+    "noise_sigma": 0.0,
+    "ap_dropout": 0.0,
+    "include_missing_mask": false,
+    "device": "mps",
+    "loss_weights": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "software": {
+    "torch": "2.5.1",
+    "sklearn": "1.8.0",
+    "python": "3.12.5",
+    "device": "mps"
+  },
+  "meta": {
+    "fold": 2,
+    "train_rows": 15680,
+    "valid_rows": 3620,
+    "train_users": [
+      1,
+      2,
+      3,
+      4,
+      7,
+      8,
+      9,
+      10,
+      11,
+      13,
+      15,
+      16,
+      17,
+      18
+    ],
+    "valid_users": [
+      5,
+      6,
+      12,
+      14
+    ],
+    "input_dim": 520
+  },
+  "epoch_curves": [
+    {
+      "epoch": 1,
+      "train_loss": 0.46726118697195634,
+      "val_loss": 0.3844909648361959
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.12364872719864456,
+      "val_loss": 0.4974063392728567
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.10011831150979413,
+      "val_loss": 0.4616789205751398
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.0827797207753269,
+      "val_loss": 0.5025483045988438
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.07904011369967948,
+      "val_loss": 0.4446101394530974
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.07865109964444929,
+      "val_loss": 0.587682444880014
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.0675678980213647,
+      "val_loss": 0.5058683499269057
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.06262205854362371,
+      "val_loss": 0.469437045077875
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.06785950262327584,
+      "val_loss": 0.5529799915752128
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.06368736181484193,
+      "val_loss": 0.6176318283797356
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.05870840840649848,
+      "val_loss": 0.6068196401098057
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.058213647774287634,
+      "val_loss": 0.5912113437069613
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.055521056223280574,
+      "val_loss": 0.7482961069204306
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.056957103182770766,
+      "val_loss": 0.7344910674973538
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.059719431020167406,
+      "val_loss": 0.7767559530605611
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.057557590997644834,
+      "val_loss": 0.6383818923087236
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.05175146538840265,
+      "val_loss": 0.7244802507849639
+    },
+    {
+      "epoch": 18,
+      "train_loss": 0.05284116280322172,
+      "val_loss": 0.5238742059456152
+    }
+  ],
+  "predictions_file": "/Users/kavyajain/Desktop/aml/results/phase2/m1/preds_baseline_f2_s1337.csv"
+}

@@ -1,0 +1,103 @@
+{
+  "exp_id": "a6_ap_dropout_5pct",
+  "fold": 1,
+  "seed": 2024,
+  "best_epoch": 3,
+  "best_inner_evaal": 150.0032515896868,
+  "final_train_loss": 0.116635465388739,
+  "final_val_loss": 0.6107139873661493,
+  "metrics": {
+    "n_samples": 3615,
+    "building_accuracy": 0.991701244813278,
+    "floor_accuracy": 0.8307053941908714,
+    "floor_accuracy_given_correct_building": 0.8292887029288702,
+    "mae_longitude": 12.87986897292403,
+    "mae_latitude": 9.872286311261623,
+    "mean_position_error": 17.58379122743179,
+    "median_position_error": 14.694007338875007,
+    "p75_position_error": 21.914985826113842,
+    "p95_position_error": 35.516497821498255,
+    "building_wrong_share": 0.008298755186721992,
+    "building_wrong_mean_position_error": 104.65594219897159,
+    "building_right_floor_wrong_share": 0.16929460580912864,
+    "building_right_floor_wrong_mean_position_error": 22.904846470976196,
+    "building_and_floor_right_share": 0.8224066390041493,
+    "building_and_floor_right_mean_position_error": 15.609808604426282,
+    "evaal_style_score": 18.675907410004406,
+    "building_macro_f1": 0.9742071856848417,
+    "floor_macro_f1": 0.8387852554621156
+  },
+  "config": {
+    "exp_id": "a6_ap_dropout_5pct",
+    "fold": 1,
+    "seed": 2024,
+    "dropout": 0.2,
+    "batch_norm": true,
+    "weight_decay": 0.0,
+    "lr": 0.001,
+    "batch_size": 64,
+    "max_epochs": 20,
+    "patience": 6,
+    "noise_sigma": 0.0,
+    "ap_dropout": 0.05,
+    "include_missing_mask": false,
+    "device": "mps",
+    "loss_weights": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "software": {
+    "torch": "2.5.1",
+    "sklearn": "1.8.0",
+    "python": "3.12.5",
+    "device": "mps"
+  },
+  "meta": {
+    "fold": 1,
+    "train_rows": 15685,
+    "valid_rows": 3615,
+    "train_users": [
+      2,
+      3,
+      5,
+      6,
+      7,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "valid_users": [
+      1,
+      4,
+      8
+    ],
+    "input_dim": 520
+  },
+  "epoch_curves": [
+    {
+      "epoch": 1,
+      "train_loss": 0.5211992092067148,
+      "val_loss": 0.44116295155203133
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.15245576333103142,
+      "val_loss": 0.44995058452089626
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.116635465388739,
+      "val_loss": 0.6107139873661493
+    }
+  ],
+  "predictions_file": "/Users/kavyajain/Desktop/aml/results/phase2/m1/preds_a6_ap_dropout_5pct_f1_s2024.csv"
+}
