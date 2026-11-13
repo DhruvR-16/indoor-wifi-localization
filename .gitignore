@@ -15,3 +15,8 @@ data/processed/*
 
 # Keep reproducible folds and report-facing results under version control.
 !data/splits/folds.json
+
+# DAE encoder checkpoints are large binaries and are regenerated
+# deterministically by scripts/train_m2_dae.py for a given fold and seed.
+results/phase2/m2/dae/*.pt
+results/phase2/m2/logs/

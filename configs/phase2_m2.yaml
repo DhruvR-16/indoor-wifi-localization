@@ -1,0 +1,79 @@
+# Member 2 Phase 2 experiment settings (A4 representations, A7 pretraining, A8 hybrid).
+#
+# Every arm below inherits `reference` and overrides exactly the factor under
+# test, which is what makes the comparison a controlled one. Folds come from
+# data/splits/folds.json (USERID-grouped); seeds are the project-wide trio.
+
+reference:
+  # Matches Member 1's A5/A6 baseline capacity and optimiser so Member 2's
+  # numbers sit on the same protocol. The trunk is 520 -> 256 -> 128, which is
+  # also the DAE encoder shape, so the A7 arms are architecture-matched.
+  hidden_dims: [256, 128]
+  dropout: 0.2
+  batch_norm: true
+  weight_decay: 0.0
+  lr: 0.001
+  batch_size: 64
+  max_epochs: 20
+  patience: 6
+  loss_weights: [1.0, 1.0, 1.0]
+  noise_sigma: 0.0
+  ap_dropout: 0.0
+  # Label-coverage-checked inner split; "legacy" reproduces M1's plain GroupKFold.
+  inner_split_mode: stratified
+  inner_splits: 4
+
+folds: [0, 1, 2, 3, 4]
+seeds: [42, 1337, 2024]
+primary_metric: evaal_style_score
+
+representations:
+  alpha: 24.0        # exponential decay constant, dB
+  beta: 2.718281828  # powed exponent (e)
+
+# --- A4: RSSI input representation ------------------------------------------
+# Six arms = {linear, exponential, powed} x {no missingness flags, flags}.
+# a4_linear is the reference arm: it is the frozen M1 input contract view.
+a4_arms:
+  - exp_id: a4_linear
+    representation: linear
+    include_missing_mask: false
+  - exp_id: a4_linear_mask
+    representation: linear
+    include_missing_mask: true
+  - exp_id: a4_exponential
+    representation: exponential
+    include_missing_mask: false
+  - exp_id: a4_exponential_mask
+    representation: exponential
+    include_missing_mask: true
+  - exp_id: a4_powed
+    representation: powed
+    include_missing_mask: false
+  - exp_id: a4_powed_mask
+    representation: powed
+    include_missing_mask: true
+
+# --- A7: random initialisation vs fold-matched DAE pretraining ---------------
+# Both arms use the 520 -> 256 -> 128 trunk. The DAE is trained per fold on
+# outer-training users only; its encoder is transferred whole or not at all.
+dae:
+  hidden_dims: [256, 128]
+  dropout: 0.2
+  batch_norm: true
+  lr: 0.001
+  batch_size: 128
+  max_epochs: 40
+  patience: 8
+  # Denoising corruption, applied to training inputs only, in the dBm domain.
+  corrupt_noise_sigma: 4.0
+  corrupt_ap_dropout: 0.1
+  # Masked reconstruction weighting; both components are reported separately.
+  observed_weight: 1.0
+  missing_weight: 0.1
+
+a7_arms:
+  - exp_id: a7_random_init
+    pretrained: false
+  - exp_id: a7_dae_pretrained
+    pretrained: true
