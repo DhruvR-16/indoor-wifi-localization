@@ -1,0 +1,278 @@
+{
+  "member": "M2",
+  "exp_id": "a7_dae_pretrained",
+  "fold": 0,
+  "seed": 1337,
+  "representation": "linear",
+  "include_missing_mask": false,
+  "input_dim": 520,
+  "best_epoch": 10,
+  "best_inner_evaal": 12.325043091005917,
+  "final_train_loss": 0.06558452734473721,
+  "final_val_loss": 0.3677630404298994,
+  "metrics": {
+    "n_samples": 4516,
+    "building_accuracy": 0.9933569530558016,
+    "floor_accuracy": 0.9087688219663419,
+    "floor_accuracy_given_correct_building": 0.9090503789567543,
+    "mae_longitude": 15.81703697755476,
+    "mae_latitude": 10.711411495345123,
+    "mean_position_error": 20.4663657269823,
+    "median_position_error": 15.064862696182175,
+    "p75_position_error": 27.956291331584264,
+    "p95_position_error": 52.78660483342898,
+    "building_wrong_share": 0.006643046944198406,
+    "building_wrong_mean_position_error": 95.71850230486311,
+    "building_right_floor_wrong_share": 0.09034543844109831,
+    "building_right_floor_wrong_mean_position_error": 36.5009572394361,
+    "building_and_floor_right_share": 0.9030115146147033,
+    "building_and_floor_right_mean_position_error": 18.30852427665921,
+    "evaal_style_score": 21.163442786326854,
+    "building_macro_f1": 0.9897893516089279,
+    "floor_macro_f1": 0.7248113804703297
+  },
+  "config": {
+    "exp_id": "a7_dae_pretrained",
+    "fold": 0,
+    "seed": 1337,
+    "representation": "linear",
+    "include_missing_mask": false,
+    "alpha": 24.0,
+    "beta": 2.718281828,
+    "hidden_dims": [
+      256,
+      128
+    ],
+    "dropout": 0.2,
+    "batch_norm": true,
+    "weight_decay": 0.0,
+    "lr": 0.001,
+    "batch_size": 64,
+    "max_epochs": 20,
+    "patience": 6,
+    "noise_sigma": 0.0,
+    "ap_dropout": 0.0,
+    "inner_split_mode": "stratified",
+    "inner_splits": 4,
+    "pretrained_encoder": "/Users/naman./Desktop/indoor-wifi-localization/results/phase2/m2/dae/dae_linear_f0_s1337.pt",
+    "device": "mps",
+    "loss_weights": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "notes": {
+      "ablation": "A7",
+      "factor": "trunk_initialisation"
+    }
+  },
+  "pretraining": {
+    "pretrained": true,
+    "checkpoint": "/Users/naman./Desktop/indoor-wifi-localization/results/phase2/m2/dae/dae_linear_f0_s1337.pt",
+    "checkpoint_fold": 0,
+    "checkpoint_representation": "linear",
+    "transferred_tensors": 14,
+    "transferred_parameters": 167810
+  },
+  "inner_split": {
+    "mode": "stratified",
+    "inner_train_rows": 11464,
+    "inner_val_rows": 3320,
+    "inner_train_users": [
+      1,
+      2,
+      3,
+      5,
+      6,
+      8,
+      10,
+      12,
+      13,
+      14,
+      16,
+      17,
+      18
+    ],
+    "inner_val_users": [
+      4,
+      7,
+      9,
+      15
+    ],
+    "buildings_missing_from_inner_train": [],
+    "floors_missing_from_inner_train": [],
+    "uncovered_inner_val_row_share": 0.0
+  },
+  "software": {
+    "torch": "2.15.0",
+    "sklearn": "1.6.1",
+    "numpy": "2.2.6",
+    "python": "3.12.14",
+    "device": "mps"
+  },
+  "meta": {
+    "fold": 0,
+    "train_rows": 14784,
+    "valid_rows": 4516,
+    "train_users": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "valid_users": [
+      11
+    ],
+    "input_dim": 520,
+    "representation": "linear",
+    "include_missing_mask": false
+  },
+  "inner_curve": [
+    {
+      "epoch": 1,
+      "inner_train_loss": 0.7796498939394951,
+      "inner_evaal": 15.65568159776094
+    },
+    {
+      "epoch": 2,
+      "inner_train_loss": 0.17965416746834914,
+      "inner_evaal": 15.390464279203986
+    },
+    {
+      "epoch": 3,
+      "inner_train_loss": 0.13226808065341578,
+      "inner_evaal": 14.366961885697227
+    },
+    {
+      "epoch": 4,
+      "inner_train_loss": 0.11065836333566242,
+      "inner_evaal": 13.143535205314423
+    },
+    {
+      "epoch": 5,
+      "inner_train_loss": 0.09915011307845513,
+      "inner_evaal": 14.019332661494689
+    },
+    {
+      "epoch": 6,
+      "inner_train_loss": 0.09645836080114047,
+      "inner_evaal": 13.408205051980199
+    },
+    {
+      "epoch": 7,
+      "inner_train_loss": 0.08959044387771023,
+      "inner_evaal": 12.945181818632
+    },
+    {
+      "epoch": 8,
+      "inner_train_loss": 0.08525422865317928,
+      "inner_evaal": 14.147914217147495
+    },
+    {
+      "epoch": 9,
+      "inner_train_loss": 0.08721395386382938,
+      "inner_evaal": 13.322286420569782
+    },
+    {
+      "epoch": 10,
+      "inner_train_loss": 0.07804727241810826,
+      "inner_evaal": 12.325043091005917
+    },
+    {
+      "epoch": 11,
+      "inner_train_loss": 0.07504178574308754,
+      "inner_evaal": 13.649790417012731
+    },
+    {
+      "epoch": 12,
+      "inner_train_loss": 0.0720810239824156,
+      "inner_evaal": 12.383228588316758
+    },
+    {
+      "epoch": 13,
+      "inner_train_loss": 0.06744025607282916,
+      "inner_evaal": 12.9183779939518
+    },
+    {
+      "epoch": 14,
+      "inner_train_loss": 0.06878290147417121,
+      "inner_evaal": 12.628283705033157
+    },
+    {
+      "epoch": 15,
+      "inner_train_loss": 0.06862662751227618,
+      "inner_evaal": 13.365841685617943
+    },
+    {
+      "epoch": 16,
+      "inner_train_loss": 0.06129233511164785,
+      "inner_evaal": 12.72009324184429
+    }
+  ],
+  "epoch_curves": [
+    {
+      "epoch": 1,
+      "train_loss": 0.6330338355911759,
+      "val_loss": 0.3974699330791621
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.1562246067763923,
+      "val_loss": 0.31005012469602306
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.1068651858088258,
+      "val_loss": 0.2889829637928748
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.09601989335247449,
+      "val_loss": 0.31082616688709863
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.08420647151800462,
+      "val_loss": 0.2985909761152637
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.08063866257732048,
+      "val_loss": 0.340142683165384
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.07607237234292351,
+      "val_loss": 0.4029338906296122
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.06701112087025787,
+      "val_loss": 0.3502657780502464
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.06719286950280914,
+      "val_loss": 0.40347770664473653
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.06558452734473721,
+      "val_loss": 0.3677630404298994
+    }
+  ],
+  "predictions_file": "/Users/naman./Desktop/indoor-wifi-localization/results/phase2/m2/preds/preds_a7_dae_pretrained_f0_s1337.csv"
+}

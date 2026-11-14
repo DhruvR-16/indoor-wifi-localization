@@ -153,3 +153,37 @@ def test_pooled_oof_sums_folds_once_per_seed(tmp_path) -> None:
     assert pooled.iloc[0]["folds_pooled"] == 5
     assert pooled.iloc[0]["pooled_rows"] == 100
     assert pooled.iloc[0]["mean_position_error"] == pytest.approx(12.0)
+
+
+def test_oof_prediction_archive_round_trips_exactly(tmp_path):
+    """The tracked archive must rebuild the per-run prediction files exactly.
+
+    The per-run CSVs are gitignored, so the archive is the only tracked copy of
+    the row-level out-of-fold predictions handed to Member 5. A lossy round-trip
+    would silently corrupt that handoff.
+    """
+    import pandas as pd
+
+    from scripts.export_m2_oof_predictions import READ_KWARGS, RUN_COLUMN
+
+    frame = pd.DataFrame(
+        {
+            "index": [0, 1],
+            "USERID": [11, 11],
+            "LONGITUDE_TRUE": [-7632.143599578828, -7637.256998033113],
+            "LATITUDE_TRUE": [4864982.217099939, 4864949.81429723],
+            "position_error": [226.49338626134445, 30.119649975681778],
+        }
+    )
+
+    packed = frame.copy()
+    packed.insert(0, RUN_COLUMN, "a4_linear_f0_s42")
+    archive = tmp_path / "archive.csv.gz"
+    packed.to_csv(archive, index=False, compression={"method": "gzip"})
+
+    restored = (
+        pd.read_csv(archive, **READ_KWARGS)
+        .drop(columns=[RUN_COLUMN])
+        .reset_index(drop=True)
+    )
+    pd.testing.assert_frame_equal(frame, restored, check_exact=True)

@@ -1,0 +1,263 @@
+{
+  "member": "M2",
+  "exp_id": "a4_powed",
+  "fold": 0,
+  "seed": 42,
+  "representation": "powed",
+  "include_missing_mask": false,
+  "input_dim": 520,
+  "best_epoch": 9,
+  "best_inner_evaal": 23.960990691384772,
+  "final_train_loss": 0.08361367381367332,
+  "final_val_loss": 1.3567266662041066,
+  "metrics": {
+    "n_samples": 4516,
+    "building_accuracy": 0.8941541186891054,
+    "floor_accuracy": 0.9054472984942427,
+    "floor_accuracy_given_correct_building": 0.9437840515106488,
+    "mae_longitude": 26.203193489473232,
+    "mae_latitude": 14.187885989643926,
+    "mean_position_error": 31.464333784293146,
+    "median_position_error": 21.114422962877924,
+    "p75_position_error": 35.619669247078306,
+    "p95_position_error": 98.70862186257739,
+    "building_wrong_share": 0.10584588131089459,
+    "building_wrong_mean_position_error": 79.1326546582441,
+    "building_right_floor_wrong_share": 0.050265721877767934,
+    "building_right_floor_wrong_mean_position_error": 43.59669707341619,
+    "building_and_floor_right_share": 0.8438883968113374,
+    "building_and_floor_right_mean_position_error": 24.762810865274652,
+    "evaal_style_score": 37.134838655860904,
+    "building_macro_f1": 0.8702062096422991,
+    "floor_macro_f1": 0.721196184610959
+  },
+  "config": {
+    "exp_id": "a4_powed",
+    "fold": 0,
+    "seed": 42,
+    "representation": "powed",
+    "include_missing_mask": false,
+    "alpha": 24.0,
+    "beta": 2.718281828,
+    "hidden_dims": [
+      256,
+      128
+    ],
+    "dropout": 0.2,
+    "batch_norm": true,
+    "weight_decay": 0.0,
+    "lr": 0.001,
+    "batch_size": 64,
+    "max_epochs": 20,
+    "patience": 6,
+    "noise_sigma": 0.0,
+    "ap_dropout": 0.0,
+    "inner_split_mode": "stratified",
+    "inner_splits": 4,
+    "pretrained_encoder": null,
+    "device": "mps",
+    "loss_weights": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "notes": {
+      "ablation": "A4",
+      "factor": "rssi_representation"
+    }
+  },
+  "pretraining": {
+    "pretrained": false
+  },
+  "inner_split": {
+    "mode": "stratified",
+    "inner_train_rows": 11185,
+    "inner_val_rows": 3599,
+    "inner_train_users": [
+      1,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      12,
+      13,
+      15,
+      16,
+      18
+    ],
+    "inner_val_users": [
+      2,
+      3,
+      14,
+      17
+    ],
+    "buildings_missing_from_inner_train": [],
+    "floors_missing_from_inner_train": [],
+    "uncovered_inner_val_row_share": 0.0
+  },
+  "software": {
+    "torch": "2.15.0",
+    "sklearn": "1.6.1",
+    "numpy": "2.2.6",
+    "python": "3.12.14",
+    "device": "mps"
+  },
+  "meta": {
+    "fold": 0,
+    "train_rows": 14784,
+    "valid_rows": 4516,
+    "train_users": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "valid_users": [
+      11
+    ],
+    "input_dim": 520,
+    "representation": "powed",
+    "include_missing_mask": false
+  },
+  "inner_curve": [
+    {
+      "epoch": 1,
+      "inner_train_loss": 0.6681787593024118,
+      "inner_evaal": 28.855594188185144
+    },
+    {
+      "epoch": 2,
+      "inner_train_loss": 0.19700861777578083,
+      "inner_evaal": 27.381695105664388
+    },
+    {
+      "epoch": 3,
+      "inner_train_loss": 0.1402736076925482,
+      "inner_evaal": 24.99711412730767
+    },
+    {
+      "epoch": 4,
+      "inner_train_loss": 0.12220365788255419,
+      "inner_evaal": 25.790797885834284
+    },
+    {
+      "epoch": 5,
+      "inner_train_loss": 0.11353350507361548,
+      "inner_evaal": 27.348893205159715
+    },
+    {
+      "epoch": 6,
+      "inner_train_loss": 0.10072964302131109,
+      "inner_evaal": 25.432398190727362
+    },
+    {
+      "epoch": 7,
+      "inner_train_loss": 0.09773732119372913,
+      "inner_evaal": 27.915390589802037
+    },
+    {
+      "epoch": 8,
+      "inner_train_loss": 0.09421340369752475,
+      "inner_evaal": 26.2338865117775
+    },
+    {
+      "epoch": 9,
+      "inner_train_loss": 0.08476116402872971,
+      "inner_evaal": 23.960990691384772
+    },
+    {
+      "epoch": 10,
+      "inner_train_loss": 0.07796713182968752,
+      "inner_evaal": 24.826452701232935
+    },
+    {
+      "epoch": 11,
+      "inner_train_loss": 0.08534325815737248,
+      "inner_evaal": 27.48093202939292
+    },
+    {
+      "epoch": 12,
+      "inner_train_loss": 0.07547828483794417,
+      "inner_evaal": 26.42995150533606
+    },
+    {
+      "epoch": 13,
+      "inner_train_loss": 0.0793945671511548,
+      "inner_evaal": 27.886884531531923
+    },
+    {
+      "epoch": 14,
+      "inner_train_loss": 0.07639623822910445,
+      "inner_evaal": 26.46459619985024
+    },
+    {
+      "epoch": 15,
+      "inner_train_loss": 0.07527651588831628,
+      "inner_evaal": 25.357549684976224
+    }
+  ],
+  "epoch_curves": [
+    {
+      "epoch": 1,
+      "train_loss": 0.6057271467787879,
+      "val_loss": 0.5751003895846891
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.1761822443278063,
+      "val_loss": 0.7624124475348164
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.13390561667355624,
+      "val_loss": 0.9175450182191922
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.11835570701143959,
+      "val_loss": 0.9802623280966786
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.10863188330035706,
+      "val_loss": 0.9310931444797718
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.09392619037847498,
+      "val_loss": 0.9756662793142695
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.08977632406792599,
+      "val_loss": 1.1065160839910237
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.09034405740631091,
+      "val_loss": 1.2900941218183914
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.08361367381367332,
+      "val_loss": 1.3567266662041066
+    }
+  ],
+  "predictions_file": "/Users/naman./Desktop/indoor-wifi-localization/results/phase2/m2/preds/preds_a4_powed_f0_s42.csv"
+}

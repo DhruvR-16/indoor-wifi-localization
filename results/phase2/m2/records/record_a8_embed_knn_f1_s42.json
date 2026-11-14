@@ -1,0 +1,259 @@
+{
+  "member": "M2",
+  "exp_id": "a8_embed_knn",
+  "fold": 1,
+  "seed": 42,
+  "representation": "linear",
+  "include_missing_mask": false,
+  "input_dim": 520,
+  "embedding_dim": 128,
+  "best_epoch": 7,
+  "best_inner_evaal": 10.864132476639151,
+  "final_train_loss": 0.07290875705761637,
+  "final_val_loss": 0.5113649403905136,
+  "metrics": {
+    "n_samples": 3615,
+    "building_accuracy": 0.9919778699861688,
+    "floor_accuracy": 0.8674965421853389,
+    "floor_accuracy_given_correct_building": 0.8664249860568879,
+    "mae_longitude": 8.144407131333748,
+    "mae_latitude": 6.829902504468762,
+    "mean_position_error": 11.582466151609275,
+    "median_position_error": 7.602793992242355,
+    "p75_position_error": 13.59280908026323,
+    "p95_position_error": 27.68349981730284,
+    "building_wrong_share": 0.008022130013831258,
+    "building_wrong_mean_position_error": 164.25166900258412,
+    "building_right_floor_wrong_share": 0.13250345781466114,
+    "building_right_floor_wrong_mean_position_error": 14.568585953233137,
+    "building_and_floor_right_share": 0.8594744121715077,
+    "building_and_floor_right_mean_position_error": 9.697123934790447,
+    "evaal_style_score": 12.513586483559482
+  },
+  "config": {
+    "exp_id": "a8_backbone",
+    "fold": 1,
+    "seed": 42,
+    "representation": "linear",
+    "include_missing_mask": false,
+    "alpha": 24.0,
+    "beta": 2.718281828,
+    "hidden_dims": [
+      256,
+      128
+    ],
+    "dropout": 0.2,
+    "batch_norm": true,
+    "weight_decay": 0.0,
+    "lr": 0.001,
+    "batch_size": 64,
+    "max_epochs": 20,
+    "patience": 6,
+    "noise_sigma": 0.0,
+    "ap_dropout": 0.0,
+    "inner_split_mode": "stratified",
+    "inner_splits": 4,
+    "pretrained_encoder": null,
+    "device": "mps",
+    "loss_weights": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "notes": {
+      "ablation": "A8",
+      "factor": "coordinate_estimator"
+    }
+  },
+  "estimator": {
+    "estimator": "knn",
+    "params": {
+      "n_neighbors": 11,
+      "weights": "distance",
+      "p": 1
+    },
+    "routed_by": "predicted",
+    "route_mode": "per_building_floor",
+    "diagnostic_only": false
+  },
+  "tuning": {
+    "estimator_name": "knn",
+    "route_mode": "per_building_floor",
+    "params": {
+      "n_neighbors": 11,
+      "weights": "distance",
+      "p": 1
+    },
+    "inner_mean_position_error_m": 8.440332856197683,
+    "candidates": [
+      {
+        "params": {
+          "n_neighbors": 3,
+          "weights": "distance",
+          "p": 1
+        },
+        "inner_mean_position_error_m": 8.758049485489254
+      },
+      {
+        "params": {
+          "n_neighbors": 3,
+          "weights": "distance",
+          "p": 2
+        },
+        "inner_mean_position_error_m": 8.782262824622965
+      },
+      {
+        "params": {
+          "n_neighbors": 5,
+          "weights": "distance",
+          "p": 1
+        },
+        "inner_mean_position_error_m": 8.504900761863302
+      },
+      {
+        "params": {
+          "n_neighbors": 5,
+          "weights": "distance",
+          "p": 2
+        },
+        "inner_mean_position_error_m": 8.493182096099998
+      },
+      {
+        "params": {
+          "n_neighbors": 7,
+          "weights": "distance",
+          "p": 1
+        },
+        "inner_mean_position_error_m": 8.500858872486285
+      },
+      {
+        "params": {
+          "n_neighbors": 7,
+          "weights": "distance",
+          "p": 2
+        },
+        "inner_mean_position_error_m": 8.468734088651747
+      },
+      {
+        "params": {
+          "n_neighbors": 9,
+          "weights": "distance",
+          "p": 1
+        },
+        "inner_mean_position_error_m": 8.46844180859089
+      },
+      {
+        "params": {
+          "n_neighbors": 9,
+          "weights": "distance",
+          "p": 2
+        },
+        "inner_mean_position_error_m": 8.51701284251379
+      },
+      {
+        "params": {
+          "n_neighbors": 11,
+          "weights": "distance",
+          "p": 1
+        },
+        "inner_mean_position_error_m": 8.440332856197683
+      },
+      {
+        "params": {
+          "n_neighbors": 11,
+          "weights": "distance",
+          "p": 2
+        },
+        "inner_mean_position_error_m": 8.509133972587307
+      },
+      {
+        "params": {
+          "n_neighbors": 15,
+          "weights": "distance",
+          "p": 1
+        },
+        "inner_mean_position_error_m": 8.488363045895401
+      },
+      {
+        "params": {
+          "n_neighbors": 15,
+          "weights": "distance",
+          "p": 2
+        },
+        "inner_mean_position_error_m": 8.571586185903259
+      }
+    ],
+    "routed_by": "predicted"
+  },
+  "pretraining": {
+    "pretrained": false
+  },
+  "inner_split": {
+    "mode": "stratified",
+    "inner_train_rows": 12706,
+    "inner_val_rows": 2979,
+    "inner_train_users": [
+      2,
+      3,
+      5,
+      6,
+      9,
+      10,
+      11,
+      12,
+      13,
+      15,
+      16,
+      17,
+      18
+    ],
+    "inner_val_users": [
+      7,
+      14
+    ],
+    "buildings_missing_from_inner_train": [],
+    "floors_missing_from_inner_train": [],
+    "uncovered_inner_val_row_share": 0.0
+  },
+  "blocked_on_m3": true,
+  "model_source": "src/models/stub_multitask.py (M3 multitask model not yet delivered)",
+  "preliminary": "Embedding comes from the M3 interface stub, not M3's multitask model. Not reportable as an A8 result.",
+  "software": {
+    "torch": "2.15.0",
+    "sklearn": "1.6.1",
+    "numpy": "2.2.6",
+    "python": "3.12.14",
+    "device": "mps"
+  },
+  "meta": {
+    "fold": 1,
+    "train_rows": 15685,
+    "valid_rows": 3615,
+    "train_users": [
+      2,
+      3,
+      5,
+      6,
+      7,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "valid_users": [
+      1,
+      4,
+      8
+    ],
+    "input_dim": 520,
+    "representation": "linear",
+    "include_missing_mask": false
+  },
+  "predictions_file": "/Users/naman./Desktop/indoor-wifi-localization/results/phase2/m2/preds/preds_a8_embed_knn_f1_s42.csv"
+}

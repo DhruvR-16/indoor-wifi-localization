@@ -1,0 +1,259 @@
+{
+  "member": "M2",
+  "exp_id": "a4_powed",
+  "fold": 4,
+  "seed": 1337,
+  "representation": "powed",
+  "include_missing_mask": false,
+  "input_dim": 520,
+  "best_epoch": 9,
+  "best_inner_evaal": 17.01133780954211,
+  "final_train_loss": 0.0743426474600785,
+  "final_val_loss": 1.9642643614439295,
+  "metrics": {
+    "n_samples": 3786,
+    "building_accuracy": 0.8940834653988379,
+    "floor_accuracy": 0.7886951928156366,
+    "floor_accuracy_given_correct_building": 0.7994091580502216,
+    "mae_longitude": 10.568431830649168,
+    "mae_latitude": 10.72239921152753,
+    "mean_position_error": 16.73534800406518,
+    "median_position_error": 14.602275425108537,
+    "p75_position_error": 21.360155505372305,
+    "p95_position_error": 37.44659355354724,
+    "building_wrong_share": 0.10591653460116218,
+    "building_wrong_mean_position_error": 24.420868184856005,
+    "building_right_floor_wrong_share": 0.17934495509772846,
+    "building_right_floor_wrong_mean_position_error": 18.382639494956145,
+    "building_and_floor_right_share": 0.7147385103011094,
+    "building_and_floor_right_mean_position_error": 15.183092085804983,
+    "evaal_style_score": 22.876393962860742,
+    "building_macro_f1": 0.5885269644471505,
+    "floor_macro_f1": 0.7929008732675374
+  },
+  "config": {
+    "exp_id": "a4_powed",
+    "fold": 4,
+    "seed": 1337,
+    "representation": "powed",
+    "include_missing_mask": false,
+    "alpha": 24.0,
+    "beta": 2.718281828,
+    "hidden_dims": [
+      256,
+      128
+    ],
+    "dropout": 0.2,
+    "batch_norm": true,
+    "weight_decay": 0.0,
+    "lr": 0.001,
+    "batch_size": 64,
+    "max_epochs": 20,
+    "patience": 6,
+    "noise_sigma": 0.0,
+    "ap_dropout": 0.0,
+    "inner_split_mode": "stratified",
+    "inner_splits": 4,
+    "pretrained_encoder": null,
+    "device": "mps",
+    "loss_weights": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "notes": {
+      "ablation": "A4",
+      "factor": "rssi_representation"
+    }
+  },
+  "pretraining": {
+    "pretrained": false
+  },
+  "inner_split": {
+    "mode": "stratified",
+    "inner_train_rows": 11258,
+    "inner_val_rows": 4256,
+    "inner_train_users": [
+      4,
+      6,
+      7,
+      8,
+      11,
+      12,
+      14,
+      16,
+      18
+    ],
+    "inner_val_users": [
+      1,
+      3,
+      5,
+      17
+    ],
+    "buildings_missing_from_inner_train": [],
+    "floors_missing_from_inner_train": [],
+    "uncovered_inner_val_row_share": 0.0
+  },
+  "software": {
+    "torch": "2.15.0",
+    "sklearn": "1.6.1",
+    "numpy": "2.2.6",
+    "python": "3.12.14",
+    "device": "mps"
+  },
+  "meta": {
+    "fold": 4,
+    "train_rows": 15514,
+    "valid_rows": 3786,
+    "train_users": [
+      1,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      11,
+      12,
+      14,
+      16,
+      17,
+      18
+    ],
+    "valid_users": [
+      2,
+      9,
+      10,
+      13,
+      15
+    ],
+    "input_dim": 520,
+    "representation": "powed",
+    "include_missing_mask": false
+  },
+  "inner_curve": [
+    {
+      "epoch": 1,
+      "inner_train_loss": 0.6423678745261647,
+      "inner_evaal": 28.716262950929504
+    },
+    {
+      "epoch": 2,
+      "inner_train_loss": 0.16506345277990808,
+      "inner_evaal": 21.03185205386242
+    },
+    {
+      "epoch": 3,
+      "inner_train_loss": 0.11935007707639174,
+      "inner_evaal": 19.395638842953073
+    },
+    {
+      "epoch": 4,
+      "inner_train_loss": 0.09719732907516035,
+      "inner_evaal": 18.99186842683533
+    },
+    {
+      "epoch": 5,
+      "inner_train_loss": 0.09614602017047053,
+      "inner_evaal": 20.063308634702494
+    },
+    {
+      "epoch": 6,
+      "inner_train_loss": 0.08123157483483241,
+      "inner_evaal": 18.099128811505327
+    },
+    {
+      "epoch": 7,
+      "inner_train_loss": 0.0817010944116522,
+      "inner_evaal": 20.019574776228506
+    },
+    {
+      "epoch": 8,
+      "inner_train_loss": 0.06845388234465975,
+      "inner_evaal": 26.688158192659163
+    },
+    {
+      "epoch": 9,
+      "inner_train_loss": 0.0716012473514473,
+      "inner_evaal": 17.01133780954211
+    },
+    {
+      "epoch": 10,
+      "inner_train_loss": 0.0727504553611983,
+      "inner_evaal": 19.770690425639916
+    },
+    {
+      "epoch": 11,
+      "inner_train_loss": 0.06701989672993394,
+      "inner_evaal": 21.5331255082201
+    },
+    {
+      "epoch": 12,
+      "inner_train_loss": 0.06394732572053644,
+      "inner_evaal": 19.468913764322814
+    },
+    {
+      "epoch": 13,
+      "inner_train_loss": 0.06450266373047436,
+      "inner_evaal": 20.84825421022577
+    },
+    {
+      "epoch": 14,
+      "inner_train_loss": 0.057778755012391644,
+      "inner_evaal": 18.77391152403993
+    },
+    {
+      "epoch": 15,
+      "inner_train_loss": 0.060632415930740535,
+      "inner_evaal": 21.40548505042841
+    }
+  ],
+  "epoch_curves": [
+    {
+      "epoch": 1,
+      "train_loss": 0.5558758386307292,
+      "val_loss": 1.187433513905853
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.16159263811239,
+      "val_loss": 1.5345338886138051
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.11554776282344827,
+      "val_loss": 1.4997521918577452
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.10290681581499646,
+      "val_loss": 1.3311703924710552
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.08926514545340597,
+      "val_loss": 1.4230976359763494
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.08835997271500988,
+      "val_loss": 1.6411940893468757
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.08425034675363896,
+      "val_loss": 1.8558100929173331
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.07602649011147121,
+      "val_loss": 1.7610929463990033
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.0743426474600785,
+      "val_loss": 1.9642643614439295
+    }
+  ],
+  "predictions_file": "/Users/naman./Desktop/indoor-wifi-localization/results/phase2/m2/preds/preds_a4_powed_f4_s1337.csv"
+}

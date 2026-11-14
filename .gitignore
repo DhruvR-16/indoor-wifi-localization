@@ -20,3 +20,10 @@ data/processed/*
 # deterministically by scripts/train_m2_dae.py for a given fold and seed.
 results/phase2/m2/dae/*.pt
 results/phase2/m2/logs/
+
+# The 180 per-run M2 prediction CSVs are ~75 MB and are regenerated
+# deterministically by the A4/A7/A8 runners. The tracked archive
+# results/phase2/m2/m2_oof_predictions.csv.gz holds the same rows at full
+# precision; scripts/export_m2_oof_predictions.py --restore rebuilds this
+# directory from it byte-for-byte.
+results/phase2/m2/preds/

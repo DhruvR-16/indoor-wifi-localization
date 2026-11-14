@@ -1,0 +1,88 @@
+{
+  "input_dim": 520,
+  "hidden_dims": [
+    256,
+    128
+  ],
+  "fold": 1,
+  "seed": 2024,
+  "representation": "linear",
+  "best_epoch": 36,
+  "reconstruction": {
+    "inner_val_observed_mse": 0.003699457165162013,
+    "inner_val_missing_mse": 0.003986310496086792,
+    "inner_val_weighted_total": 0.004098088214770692,
+    "inner_val_observed_rmse_dbm": 6.690547937087094,
+    "observed_weight": 1.0,
+    "missing_weight": 0.1
+  },
+  "corruption": {
+    "noise_sigma_dbm": 4.0,
+    "ap_dropout": 0.1,
+    "applied_to": "inner-training inputs only; sentinel never corrupted"
+  },
+  "inner_split": {
+    "mode": "stratified",
+    "inner_train_rows": 12887,
+    "inner_val_rows": 2798,
+    "inner_train_users": [
+      2,
+      3,
+      6,
+      7,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "inner_val_users": [
+      5,
+      16,
+      17,
+      18
+    ],
+    "buildings_missing_from_inner_train": [],
+    "floors_missing_from_inner_train": [],
+    "uncovered_inner_val_row_share": 0.0
+  },
+  "meta": {
+    "fold": 1,
+    "train_rows": 15685,
+    "valid_rows": 3615,
+    "train_users": [
+      2,
+      3,
+      5,
+      6,
+      7,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "valid_users": [
+      1,
+      4,
+      8
+    ],
+    "input_dim": 520,
+    "representation": "linear",
+    "include_missing_mask": false
+  },
+  "software": {
+    "torch": "2.15.0",
+    "numpy": "2.2.6",
+    "python": "3.12.14",
+    "device": "mps"
+  },
+  "checkpoint": "/Users/naman./Desktop/indoor-wifi-localization/results/phase2/m2/dae/dae_linear_f1_s2024.pt"
+}

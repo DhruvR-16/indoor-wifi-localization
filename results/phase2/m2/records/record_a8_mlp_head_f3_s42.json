@@ -1,0 +1,141 @@
+{
+  "member": "M2",
+  "exp_id": "a8_mlp_head",
+  "fold": 3,
+  "seed": 42,
+  "representation": "linear",
+  "include_missing_mask": false,
+  "input_dim": 520,
+  "embedding_dim": 128,
+  "best_epoch": 14,
+  "best_inner_evaal": 15.653735725524513,
+  "final_train_loss": 0.04990321397014851,
+  "final_val_loss": 1.9383016909330577,
+  "metrics": {
+    "n_samples": 3763,
+    "building_accuracy": 0.8963592878022855,
+    "floor_accuracy": 0.6757905926122775,
+    "floor_accuracy_given_correct_building": 0.6762525941298547,
+    "mae_longitude": 15.517965031275358,
+    "mae_latitude": 11.521248515039968,
+    "mean_position_error": 21.15788117826197,
+    "median_position_error": 16.916525105436534,
+    "p75_position_error": 28.81272788677199,
+    "p95_position_error": 54.689471051165924,
+    "building_wrong_share": 0.10364071219771459,
+    "building_wrong_mean_position_error": 33.11044917628589,
+    "building_right_floor_wrong_share": 0.29019399415360086,
+    "building_right_floor_wrong_mean_position_error": 19.612157515008853,
+    "building_and_floor_right_share": 0.6061652936486845,
+    "building_and_floor_right_mean_position_error": 19.854255014756085,
+    "evaal_style_score": 27.636754417698587
+  },
+  "config": {
+    "exp_id": "a8_backbone",
+    "fold": 3,
+    "seed": 42,
+    "representation": "linear",
+    "include_missing_mask": false,
+    "alpha": 24.0,
+    "beta": 2.718281828,
+    "hidden_dims": [
+      256,
+      128
+    ],
+    "dropout": 0.2,
+    "batch_norm": true,
+    "weight_decay": 0.0,
+    "lr": 0.001,
+    "batch_size": 64,
+    "max_epochs": 20,
+    "patience": 6,
+    "noise_sigma": 0.0,
+    "ap_dropout": 0.0,
+    "inner_split_mode": "stratified",
+    "inner_splits": 4,
+    "pretrained_encoder": null,
+    "device": "mps",
+    "loss_weights": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "notes": {
+      "ablation": "A8",
+      "factor": "coordinate_estimator"
+    }
+  },
+  "estimator": {
+    "estimator": "multitask_coordinate_head"
+  },
+  "tuning": null,
+  "pretraining": {
+    "pretrained": false
+  },
+  "inner_split": {
+    "mode": "stratified",
+    "inner_train_rows": 11383,
+    "inner_val_rows": 4154,
+    "inner_train_users": [
+      2,
+      4,
+      5,
+      6,
+      9,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "inner_val_users": [
+      1,
+      8,
+      10
+    ],
+    "buildings_missing_from_inner_train": [],
+    "floors_missing_from_inner_train": [],
+    "uncovered_inner_val_row_share": 0.0
+  },
+  "blocked_on_m3": true,
+  "model_source": "src/models/stub_multitask.py (M3 multitask model not yet delivered)",
+  "preliminary": "Embedding comes from the M3 interface stub, not M3's multitask model. Not reportable as an A8 result.",
+  "software": {
+    "torch": "2.15.0",
+    "sklearn": "1.6.1",
+    "numpy": "2.2.6",
+    "python": "3.12.14",
+    "device": "mps"
+  },
+  "meta": {
+    "fold": 3,
+    "train_rows": 15537,
+    "valid_rows": 3763,
+    "train_users": [
+      1,
+      2,
+      4,
+      5,
+      6,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "valid_users": [
+      3,
+      7,
+      16,
+      17,
+      18
+    ],
+    "input_dim": 520,
+    "representation": "linear",
+    "include_missing_mask": false
+  },
+  "predictions_file": "/Users/naman./Desktop/indoor-wifi-localization/results/phase2/m2/preds/preds_a8_mlp_head_f3_s42.csv"
+}
