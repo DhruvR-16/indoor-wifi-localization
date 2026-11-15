@@ -1,0 +1,125 @@
+{
+  "member": "M3",
+  "exp_id": "a2_uncertainty_weights",
+  "fold": 0,
+  "seed": 2024,
+  "best_epoch": 4,
+  "inner_best_evaal": 26.21786666606718,
+  "selected_loss_weights": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "metrics": {
+    "n_samples": 4516,
+    "building_accuracy": 0.9860496014171833,
+    "floor_accuracy": 0.9479627989371124,
+    "floor_accuracy_given_correct_building": 0.9490231304738379,
+    "mae_longitude": 25.46483715452696,
+    "mae_latitude": 11.638507528786537,
+    "mean_position_error": 29.181226371884634,
+    "median_position_error": 23.53404000058137,
+    "p75_position_error": 38.98617404777869,
+    "p95_position_error": 74.50672054147611,
+    "building_wrong_share": 0.013950398582816652,
+    "building_wrong_mean_position_error": 113.86793286925277,
+    "building_right_floor_wrong_share": 0.050265721877767934,
+    "building_right_floor_wrong_mean_position_error": 48.46088390350376,
+    "building_and_floor_right_share": 0.9357838795394154,
+    "building_and_floor_right_mean_position_error": 26.88313248428129,
+    "evaal_style_score": 30.086895105277016,
+    "building_macro_f1": 0.9789354111407532,
+    "floor_macro_f1": 0.7558547738933966
+  },
+  "inner_split": {
+    "method": "GroupKFold",
+    "n_splits": 4,
+    "train_users": [
+      1,
+      2,
+      4,
+      5,
+      6,
+      8,
+      9,
+      10,
+      12,
+      13,
+      14,
+      15
+    ],
+    "valid_users": [
+      3,
+      7,
+      16,
+      17,
+      18
+    ],
+    "train_rows": 11021,
+    "valid_rows": 3763,
+    "missing_buildings_from_inner_train": []
+  },
+  "candidate_inner_scores": [
+    {
+      "weights": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "score": 26.21786666606718,
+      "best_epoch": 4
+    }
+  ],
+  "config": {
+    "input_dim": 520,
+    "hidden_dims": [
+      512,
+      256,
+      128
+    ],
+    "dropout": 0.3,
+    "batch_norm": true,
+    "loss_weighting": "uncertainty",
+    "epochs": 200,
+    "patience": 20,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "batch_size": 256,
+    "device": "auto",
+    "seeds": [
+      2024
+    ]
+  },
+  "outer_train_users": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ],
+  "outer_valid_users": [
+    11
+  ],
+  "software": {
+    "python": "3.13.6",
+    "torch": "2.13.0",
+    "sklearn": "1.6.1",
+    "device": "mps"
+  },
+  "parameter_count": 441933,
+  "predictions_file": "/Users/Dhruv/Desktop/aml-dl/results/phase2/m3/preds/preds_a2_uncertainty_weights_f0_s2024.csv",
+  "checkpoint_file": "/Users/Dhruv/Desktop/aml-dl/results/phase2/m3/checkpoints/model_a2_uncertainty_weights_f0_s2024.pt",
+  "curves_file": "/Users/Dhruv/Desktop/aml-dl/results/phase2/m3/curves/curves_a2_uncertainty_weights_f0_s2024.csv"
+}

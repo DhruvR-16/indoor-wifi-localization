@@ -1,0 +1,123 @@
+{
+  "member": "M3",
+  "exp_id": "a3_hierarchical_floor",
+  "fold": 1,
+  "seed": 1337,
+  "best_epoch": 73,
+  "inner_best_evaal": 16.825631085609825,
+  "selected_loss_weights": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "metrics": {
+    "n_samples": 3615,
+    "building_accuracy": 0.9919778699861688,
+    "floor_accuracy": 0.8514522821576763,
+    "floor_accuracy_given_correct_building": 0.8502509760178472,
+    "mae_longitude": 9.539200407373789,
+    "mae_latitude": 7.327939142461964,
+    "mean_position_error": 13.090160038709941,
+    "median_position_error": 10.185093051240013,
+    "p75_position_error": 15.866522230180074,
+    "p95_position_error": 26.045357529278835,
+    "building_wrong_share": 0.008022130013831258,
+    "building_wrong_mean_position_error": 114.39928316190888,
+    "building_right_floor_wrong_share": 0.14854771784232365,
+    "building_right_floor_wrong_mean_position_error": 20.441833006961136,
+    "building_and_floor_right_share": 0.8434301521438451,
+    "building_and_floor_right_mean_position_error": 10.83177599327745,
+    "evaal_style_score": 14.085457410770799,
+    "building_macro_f1": 0.9761995589060684,
+    "floor_macro_f1": 0.8526903923308425
+  },
+  "inner_split": {
+    "method": "GroupKFold",
+    "n_splits": 4,
+    "train_users": [
+      3,
+      5,
+      6,
+      7,
+      11,
+      12,
+      14,
+      16,
+      17,
+      18
+    ],
+    "valid_users": [
+      2,
+      9,
+      10,
+      13,
+      15
+    ],
+    "train_rows": 11899,
+    "valid_rows": 3786,
+    "missing_buildings_from_inner_train": []
+  },
+  "candidate_inner_scores": [
+    {
+      "weights": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "score": 16.825631085609825,
+      "best_epoch": 73
+    }
+  ],
+  "config": {
+    "input_dim": 520,
+    "hidden_dims": [
+      512,
+      256,
+      128
+    ],
+    "dropout": 0.3,
+    "batch_norm": true,
+    "floor_mode": "hierarchical",
+    "epochs": 200,
+    "patience": 20,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "batch_size": 256,
+    "device": "auto",
+    "seeds": [
+      1337
+    ]
+  },
+  "outer_train_users": [
+    2,
+    3,
+    5,
+    6,
+    7,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ],
+  "outer_valid_users": [
+    1,
+    4,
+    8
+  ],
+  "software": {
+    "python": "3.13.6",
+    "torch": "2.13.0",
+    "sklearn": "1.6.1",
+    "device": "mps"
+  },
+  "parameter_count": 443220,
+  "predictions_file": "/Users/Dhruv/Desktop/aml-dl/results/phase2/m3/preds/preds_a3_hierarchical_floor_f1_s1337.csv",
+  "checkpoint_file": "/Users/Dhruv/Desktop/aml-dl/results/phase2/m3/checkpoints/model_a3_hierarchical_floor_f1_s1337.pt",
+  "curves_file": "/Users/Dhruv/Desktop/aml-dl/results/phase2/m3/curves/curves_a3_hierarchical_floor_f1_s1337.csv"
+}
