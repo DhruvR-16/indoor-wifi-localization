@@ -88,4 +88,4 @@ python scripts/run_m4_learning_curve.py --device auto
 - Agree with the team on the final selection metric and candidate before any official-file evaluation; this analysis uses grouped OOF only.
 - Treat bootstrap and McNemar findings as exploratory until the team settles its planned comparison family and multiple-testing policy.
 - Preserve M1's inner-split caveat and M2 A8's incomplete status in final conclusions.
-- M5 has integrated the available A1–A7 evidence and completed the A9 width/depth sweep in `docs/phase2_integrated_report.md`. Extend the paired user-cluster analysis to A9 before making inferential claims about that sweep.
+- M5 has integrated the available A1–A7 evidence and completed the A9 width/depth sweep in `docs/phase2_integrated_report.tex` (compiled PDF: `output/pdf/phase2_integrated_report.pdf`). Extend the paired user-cluster analysis to A9 before making inferential claims about that sweep.

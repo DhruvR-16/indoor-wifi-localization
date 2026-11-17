@@ -1,0 +1,495 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+\documentclass[
+  10pt,
+  a4paper,
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Indoor Wi-Fi Localization},
+  pdfauthor={Kavya Jain; Naman Jain; Dhruv Ramani; Lakshya Agrawal; Akhilesh Kumar},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Indoor Wi-Fi Localization}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Phase 2 Experimental Report}
+\author{Kavya Jain; Naman Jain; Dhruv Ramani; Lakshya Agrawal; Akhilesh
+Kumar}
+\date{}
+
+\setlength{\tabcolsep}{2.5pt}
+\renewcommand{\arraystretch}{1.15}
+\emergencystretch=2em
+\begin{document}
+\maketitle
+
+\subsection{Abstract}\label{abstract}
+
+This phase evaluates deep-learning and hybrid methods for predicting
+building, floor, and indoor coordinates from UJIIndoorLoc Wi-Fi signal
+fingerprints. Experiments use cleaned training data, user-grouped
+cross-validation, three random seeds, fold-specific preprocessing, and
+out-of-fold predictions. Available results show that independent task
+networks achieve the lowest observed localization score among the
+completed arms, while paired user-level uncertainty does not establish a
+reliable EvAAL improvement over the shared MLP or M1 baseline. Denoising
+pretraining improves localization metrics over random initialization in
+M2\textquotesingle s available A7 comparison, with lower floor accuracy.
+M5\textquotesingle s controlled A9 sweep favors a deeper 512-wide model
+descriptively. M2\textquotesingle s A8 hybrid remains incomplete.
+
+\subsection{1. Objective and scope}\label{1-objective-and-scope}
+
+The objective is to compare model designs for offline Wi-Fi fingerprint
+localization. For each scan, the system predicts a building class, a
+floor class, and longitude/latitude coordinates in metres. The project
+uses recorded CSV scans; it does not perform live Wi-Fi scanning, query
+a live database, or deploy a mobile application.
+
+The data comes from the UJIIndoorLoc dataset published through the UCI
+Machine Learning Repository (DOI:
+\href{https://doi.org/10.24432/C5MS59}{10.24432/C5MS59}). The source
+training file contains 19,937 rows. Removing 637 exact duplicate
+training rows leaves 19,300 cleaned scans. Phase 1 drops 55
+training-constant WAP columns; Phase 2 restores their positions as
+missing signals to preserve a fixed 520-WAP input layout. The official
+1,111-row validation file is not used in the Phase 2 experiments; it was
+evaluated earlier for a fixed-setting Phase 1 baseline and is not an
+untouched test set for new model selection.
+
+\subsection{2. Shared evaluation
+protocol}\label{2-shared-evaluation-protocol}
+
+\begin{itemize}
+\tightlist
+\item
+  Five outer \texttt{GroupKFold} partitions keep every \texttt{USERID}
+  entirely in one partition. Each scan is evaluated out of fold once per
+  model and seed.
+\item
+  Runs use random seeds 42, 1337, and 2024.
+\item
+  Signal absence is represented by the UJIIndoorLoc \texttt{+100}
+  sentinel and mapped to zero in linear-positive RSSI views. Coordinate
+  scaling is fit on training users only and predictions are
+  inverse-transformed before metre-based scoring.
+\item
+  Architecture, stopping epoch, and loss weights are selected only from
+  outer-training users where the member\textquotesingle s protocol calls
+  for selection. The outer held-out users are used for final scoring.
+\item
+  The primary combined metric is the EvAAL-style score:
+  \texttt{position\ error\ +\ 50\ m\ ×\ wrong-building\ indicator\ +\ 4\ m\ ×\ wrong-floor\ indicator}.
+  Classification accuracy and mean coordinate error are reported
+  alongside it.
+\item
+  All summaries distinguish pooled scan-level OOF metrics from
+  across-run variation. M4\textquotesingle s paired intervals resample
+  USERID clusters; its scan-level McNemar p-values are exploratory
+  because scans within one user are dependent.
+\end{itemize}
+
+\textbf{Architecture comparability caveat:} M1\textquotesingle s A5/A6
+runs and M2\textquotesingle s A4/A7 reference use the temporary
+\texttt{520\ →\ 256\ →\ 128} interface architecture. M3 uses its final
+\texttt{520\ →\ 512\ →\ 256\ →\ 128} trunk and nonlinear coordinate
+head. A5/A6 and A4/A7 contrasts are controlled within their own
+experiment families, but cross-member rows in the comparison table are
+descriptive comparisons of complete pipelines, not architecture-matched
+causal comparisons. M1\textquotesingle s inner-split limitation also
+affects early-stopping selection on outer folds 0 and 1. Rerun M1 on
+M3\textquotesingle s final factory with label-covered inner folds before
+making claims that its regularization/augmentation findings transfer to
+that architecture.
+
+\subsection{3. Work completed by
+member}\label{3-work-completed-by-member}
+
+\begingroup\small
+\begin{longtable}[]{@{}p{0.22\linewidth}p{0.32\linewidth}p{0.34\linewidth}@{}}
+\toprule\noalign{}
+Member & Work and output & Status and interpretation \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+M1 & Data pipeline, robustness and regularization experiments A5/A6;
+five folds × three seeds; run-level predictions and summaries. & Initial
+sweep uses the temporary 520→256→128 stub and plain inner GroupKFold;
+results are provisional for transfer to M3\textquotesingle s final
+model. \\
+M2 & A4 RSSI representation comparisons and A7 denoising-pretraining
+comparison; row-aligned OOF predictions. & A4/A7 are controlled within
+M2\textquotesingle s 520→256→128 reference architecture.
+A8\textquotesingle s current runner is stub-backed and lacks required
+candidates, so its outputs are not valid results and are excluded. \\
+M3 & Shared and independent multitask networks, fixed and learned loss
+weighting, hierarchical floor prediction; five configurations × five
+folds × three seeds. & Complete. The model and run artifacts are under
+\texttt{src/models/dl/} and \texttt{results/phase2/m3/}. \\
+M4 & Paired OOF comparisons, USERID-cluster bootstrap intervals, floor
+calibration, per-user results, worst-error queue, and training-size
+learning curve. & Completed for valid available arms. A8 is excluded;
+final candidate selection and interpretation remain. \\
+M5 & Cross-member integration, report tables/figures, and A9 width/depth
+controlled sweep. & Complete for available work. A8 remains pending with
+M2; update this report after valid A8 results exist. \\
+\end{longtable}
+\endgroup
+
+\subsection{4. Main cross-member
+comparison}\label{4-main-cross-member-comparison}
+
+The table pools scans across the three seed-level OOF runs. M2 arms are
+limited to valid A4/A7 results. These means are descriptive and should
+be read with the paired USERID bootstrap intervals in the M4 report.
+
+\begingroup\small
+\begin{longtable}[]{@{}p{0.24\linewidth}p{0.16\linewidth}p{0.16\linewidth}p{0.16\linewidth}p{0.16\linewidth}@{}}
+\toprule\noalign{}
+Model & EvAAL-style score (m) & Mean position error (m) & Floor accuracy
+& Building accuracy \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+M3 independent task networks & \textbf{19.29} & \textbf{15.91} & 82.18\%
+& 94.66\% \\
+M2 A7 DAE-pretrained & 19.76 & 17.42 & 82.13\% & 96.70\% \\
+M3 inner-selected fixed loss weights & 20.11 & 17.66 & 81.23\% &
+96.61\% \\
+M1 fixed baseline & 21.41 & 19.28 & 81.90\% & 97.18\% \\
+M3 shared multitask & 21.47 & 18.67 & 81.86\% & 95.85\% \\
+M2 A4 linear-positive neural reference & 21.95 & 19.40 & 82.50\% &
+96.30\% \\
+M2 A7 random initialization & 21.95 & 19.40 & 82.50\% & 96.30\% \\
+M3 hierarchical floor head & 22.00 & 19.36 & 81.42\% & 96.20\% \\
+M3 learned uncertainty weights & 22.25 & 19.66 & 81.03\% & 96.34\% \\
+\end{longtable}
+\endgroup
+
+M3\textquotesingle s independent-task model is the best observed
+completed arm on EvAAL and coordinate error. Its paired USERID-bootstrap
+EvAAL difference is −1.11 m versus the shared M3 control (95\% CI −2.76
+to 0.38) and −1.62 m versus the M1 baseline (−3.77 to 0.41); both
+intervals include zero. It is therefore appropriate to call it the best
+observed score, but not a proven statistically reliable EvAAL
+improvement. Its position-error advantage over M1 is −2.80 m (95\% CI
+−4.36 to −1.53).
+
+For A7, DAE-pretraining versus random initialization has a paired
+user-mean EvAAL difference of −1.32 m (95\% CI −2.48 to −0.39). Floor
+accuracy is 1.1 percentage points lower (−2.0 to −0.3 points). These are
+exploratory unadjusted comparisons across several models.
+
+\pandocbounded{\includegraphics[keepaspectratio,alt={Grouped OOF model comparison}]{../results/figures/phase2_m5_model_comparison.png}}
+
+\subsection{5. Member-level findings}\label{5-member-level-findings}
+
+\subsubsection{M1: robustness and
+regularization}\label{m1-robustness-and-regularization}
+
+Across M1\textquotesingle s 15 fold/seed runs per configuration, weight
+decay (\texttt{1e-4}) has the lowest mean EvAAL score in the M1 table at
+20.43 ± 5.71 m. The baseline is 21.24 ± 5.49 m; strong dropout at 0.5 is
+worse at 29.70 ± 8.39 m. The noise and access-point dropout
+augmentations are near the baseline range. The inner-split caveat in the
+M1 report applies to these A5/A6 stopping choices.
+
+\pandocbounded{\includegraphics[keepaspectratio,alt={M1 robustness and regularization comparison}]{../results/figures/phase2_m5_m1_robustness.png}}
+
+\subsubsection{M2: representations and
+pretraining}\label{m2-representations-and-pretraining}
+
+The valid A4/A7 OOF predictions are included in the cross-member
+comparison. The A7 pretrained and random-initialized arms are
+protocol-identical apart from trunk initialization. Their row-aligned
+comparison supports lower localization errors with DAE pretraining in
+the current runs, alongside a modest floor-accuracy tradeoff. A8 is
+excluded until it uses the real M3 representation and completes the
+named hybrid candidates under the grouped protocol.
+
+\subsubsection{M3: multitask ablations}\label{m3-multitask-ablations}
+
+M3 compares a shared trunk with independent task trunks (A1),
+inner-selected and learned uncertainty loss weights (A2), and a
+building-probability-conditioned floor head (A3). The independent task
+networks give the lowest observed EvAAL score. Inner-selected fixed
+weights improve over the shared control descriptively; learned
+uncertainty weighting and the hierarchical floor head do not improve the
+headline localization score in the current sweep. M4\textquotesingle s
+paired uncertainty does not establish a significant EvAAL gain for
+independent over shared.
+
+\subsubsection{M4: statistical and error
+analysis}\label{m4-statistical-and-error-analysis}
+
+M4 resampled 18 USERID clusters for paired 95\% intervals, produced
+per-user metrics, examined 100 worst coordinate errors per seed for the
+independent M3 model, and inferred floor probabilities from held-out M3
+checkpoints. M3 floor ECE is about 0.139--0.146 across arms using 15
+equal-width bins. The independent model\textquotesingle s NLL (1.503) is
+higher than the shared model\textquotesingle s (1.261), so its best
+floor accuracy does not mean its probabilities are better calibrated.
+
+\pandocbounded{\includegraphics[keepaspectratio,alt={M4 learning curve}]{../results/figures/phase2_m5_learning_curve.png}}
+
+The learning curve retrains the independent M3 architecture at 25\%,
+50\%, 75\%, and 100\% of outer-training scans with the same held-out
+users. Epoch counts are frozen from each matching M3 inner-validation
+run, so this is a data-volume curve under a fixed training schedule.
+Localization errors generally decline from 25\% to 100\%, with high
+fold/seed variability and a small non-monotonic difference between 75\%
+and 100\%.
+
+\subsection{6. M5 A9: width and depth}\label{6-m5-a9-width-and-depth}
+
+M5 varied one architecture factor at a time around the existing 512×3
+independent-task model. Every variant was evaluated on the same five
+USERID folds and three seeds; the 512×3 reference reuses
+M3\textquotesingle s existing runs. Each value below is the mean ±
+sample standard deviation over the 15 fold/seed run metrics (unlike the
+pooled scan table in Section 4).
+
+\begingroup\small
+\begin{longtable}[]{@{}p{0.24\linewidth}p{0.16\linewidth}p{0.16\linewidth}p{0.16\linewidth}p{0.16\linewidth}@{}}
+\toprule\noalign{}
+Width × depth & EvAAL (m), mean ± SD & Position error (m), mean ± SD &
+Floor accuracy & Building accuracy \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+512 × 2 & 20.95 ± 7.18 & 17.30 ± 4.16 & 80.02\% ± 12.87\% & 94.29\% ±
+8.11\% \\
+512 × 3 (reference) & 19.29 ± 6.31 & 15.84 ± 2.63 & 81.82\% ± 12.60\% &
+94.56\% ± 8.02\% \\
+512 × 4 & \textbf{16.68 ± 6.01} & \textbf{13.99 ± 2.95} &
+\textbf{82.01\% ± 11.18\%} & \textbf{96.06\% ± 6.24\%} \\
+256 × 3 & 21.31 ± 6.83 & 18.47 ± 4.51 & 80.96\% ± 12.34\% & 95.84\% ±
+6.63\% \\
+1024 × 3 & 17.71 ± 6.79 & 14.23 ± 3.26 & 81.49\% ± 10.23\% & 94.53\% ±
+8.48\% \\
+\end{longtable}
+\endgroup
+
+The 512×4 variant has the lowest mean score in this controlled sweep.
+These are descriptive fold/seed comparisons, not a paired significance
+result; M4\textquotesingle s cluster-bootstrap analysis has not yet been
+extended to A9. Do not call the 512×4 gain statistically reliable until
+that paired analysis is done.
+
+\pandocbounded{\includegraphics[keepaspectratio,alt={A9 width and depth ablation}]{../results/figures/phase2_m5_a9_architecture.png}}
+
+\subsection{7. A1--A9 ablation status}\label{7-a1a9-ablation-status}
+
+\begingroup\small
+\begin{longtable}[]{@{}p{0.22\linewidth}p{0.32\linewidth}p{0.34\linewidth}@{}}
+\toprule\noalign{}
+Ablation & Question & Status \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A1 & Shared versus independent task networks & Complete; M3 \\
+A2 & Fixed selected versus learned loss weights & Complete; M3 \\
+A3 & Flat versus building-conditioned floor head & Complete; M3 \\
+A4 & RSSI representation and missingness view & Complete; M2 \\
+A5 & Dropout, weight decay, and batch normalization & Complete; M1, with
+inner-split caveat \\
+A6 & RSSI noise and AP dropout augmentation & Complete; M1, with
+inner-split caveat \\
+A7 & DAE-pretrained versus random trunk initialization & Complete; M2 \\
+A8 & Learned embedding and hybrid routed/local estimators &
+\textbf{Incomplete; do not report stub-backed values} \\
+A9 & Network width and depth & Complete for 512×2, 512×4, 256×3, and
+1024×3, with 512×3 M3 reference; M5 \\
+\end{longtable}
+\endgroup
+
+\subsection{8. Limitations and next
+work}\label{8-limitations-and-next-work}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Complete M2 A8 using the actual M3 encoder and all required hybrid
+  candidates; rerun valid grouped OOF predictions before comparing it.
+\item
+  Extend M4\textquotesingle s paired USERID-bootstrap analysis to the A9
+  predictions before making inferential claims about architecture
+  changes.
+\item
+  Rerun M1 A5/A6 with M3\textquotesingle s final factory and
+  label-covered inner folds for architecture-matched conclusions. The
+  current M1 sweep is internally controlled on the temporary 520→256→128
+  model, but its transfer to M3\textquotesingle s deeper model is
+  unverified.
+\item
+  Interpret original M1 A5/A6 results with their inner-validation
+  label-coverage limitation. The saved outer folds remain user-held-out,
+  but the affected stopping selections are not equivalent to
+  label-covered inner validation.
+\item
+  Treat the current multi-model bootstrap intervals and scan-level
+  McNemar results as exploratory; the intervals are not adjusted for
+  multiple comparisons.
+\item
+  Do not tune on or claim a fresh final evaluation from the official
+  1,111-row file. It was used earlier for a fixed Phase 1 baseline.
+\end{enumerate}
+
+\subsection{9. Reproduction and
+artifacts}\label{9-reproduction-and-artifacts}
+
+From the repository root, run the relevant member analyses after
+downloading the dataset and building the saved folds:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ExtensionTok{python}\NormalTok{ scripts/analyze\_m4\_oof.py }\AttributeTok{{-}{-}bootstrap}\NormalTok{ 2000}
+\ExtensionTok{python}\NormalTok{ scripts/run\_m4\_learning\_curve.py }\AttributeTok{{-}{-}device}\NormalTok{ auto}
+\ExtensionTok{python}\NormalTok{ scripts/run\_m5\_a9.py}
+\ExtensionTok{python}\NormalTok{ scripts/build\_m5\_assets.py}
+\end{Highlighting}
+\end{Shaded}
+
+Member-level evidence appears in the M1, M2, M3 and M4 reports under
+\path{docs/}. Integrated tables are in \path{results/phase2/m4/} and
+\path{results/phase2/m5/}; figures are in \path{results/figures/}.
+
+\subsection{References}\label{references}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  UCI Machine Learning Repository, ``UJIIndoorLoc,'' DOI:
+  \href{https://doi.org/10.24432/C5MS59}{10.24432/C5MS59}.
+\item
+  S. Xia, Y. Liu, G. Yuan, M. Zhu, and Z. Wang, ``Indoor Fingerprint
+  Positioning Based on Wi-Fi: An Overview,'' \emph{ISPRS International
+  Journal of Geo-Information}, vol. 6, no. 5, 135, 2017, doi:
+  \href{https://doi.org/10.3390/ijgi6050135}{10.3390/ijgi6050135}.
+\item
+  F. Liu et al., ``Survey on WiFi-based indoor positioning techniques,''
+  \emph{IET Communications}, vol. 14, no. 9, pp. 1372--1383, 2020, doi:
+  \href{https://doi.org/10.1049/iet-com.2019.1059}{10.1049/iet-com.2019.1059}.
+\end{enumerate}
+
+\end{document}
