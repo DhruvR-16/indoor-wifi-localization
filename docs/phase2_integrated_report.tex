@@ -126,354 +126,484 @@
   \apptocmd{\@title}{\par {\large #1 \par}}{}{}
 }
 \makeatother
-\subtitle{Phase 2 Experimental Report}
-\author{Kavya Jain; Naman Jain; Dhruv Ramani; Lakshya Agrawal; Akhilesh
-Kumar}
-\date{}
+\subtitle{Phase 2: Deep Learning Experiments and Evaluation}
+\author{Kavya Jain, Naman Jain, Dhruv Ramani, Lakshya Agrawal, Akhilesh Kumar}
+\date{November 2026}
 
-\setlength{\tabcolsep}{2.5pt}
-\renewcommand{\arraystretch}{1.15}
+\usepackage{fancyhdr}
+\usepackage{float}
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Indoor Wi-Fi Localization}
+\fancyhead[R]{\small Phase 2 Report}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.13}
 \emergencystretch=2em
+
 \begin{document}
 \maketitle
 
-\subsection{Abstract}\label{abstract}
+{
+\hypersetup{linkcolor=}
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\section{Abstract}\label{abstract}
 
-This phase evaluates deep-learning and hybrid methods for predicting
-building, floor, and indoor coordinates from UJIIndoorLoc Wi-Fi signal
-fingerprints. Experiments use cleaned training data, user-grouped
-cross-validation, three random seeds, fold-specific preprocessing, and
-out-of-fold predictions. Available results show that independent task
-networks achieve the lowest observed localization score among the
-completed arms, while paired user-level uncertainty does not establish a
-reliable EvAAL improvement over the shared MLP or M1 baseline. Denoising
-pretraining improves localization metrics over random initialization in
-M2\textquotesingle s available A7 comparison, with lower floor accuracy.
-M5\textquotesingle s controlled A9 sweep favors a deeper 512-wide model
-descriptively. M2\textquotesingle s A8 hybrid remains incomplete.
+This report evaluates neural approaches to building, floor, and
+coordinate prediction from Wi-Fi fingerprints in the UJIIndoorLoc
+dataset. After removing 637 duplicate training records, 19,300 scans
+were assessed using five user-grouped outer folds and three random
+seeds. The study compares signal transformations, access-point detection
+masks, denoising pretraining, regularization, task sharing, loss
+weighting, floor hierarchy, and network capacity. Across the evaluated
+multitask designs, independent task networks reached a pooled
+out-of-fold EvAAL-style score of 19.29 m and a mean coordinate error of
+15.91 m. A controlled width/depth sweep found the lowest mean fold/seed
+score with a four-layer, 512-unit architecture (16.68 ± 6.01 m;
+coordinate error 13.99 ± 2.95 m). Paired user-level intervals for the
+independent versus shared network include zero on the combined score, so
+that descriptive ranking is not evidence of a reliable improvement. The
+Phase 1 per-building k-nearest-neighbor model remains the stronger
+reported coordinate baseline at 12.21 m. Results are from saved Wi-Fi
+scans; this report does not claim live localization.
 
-\subsection{1. Objective and scope}\label{1-objective-and-scope}
+\section{1. Introduction}\label{introduction}
 
-The objective is to compare model designs for offline Wi-Fi fingerprint
-localization. For each scan, the system predicts a building class, a
-floor class, and longitude/latitude coordinates in metres. The project
-uses recorded CSV scans; it does not perform live Wi-Fi scanning, query
-a live database, or deploy a mobile application.
+Indoor satellite positioning is unreliable, whereas nearby Wi-Fi access
+points provide a repeatable, location-dependent signal pattern.
+Fingerprint localization learns the relation between those received
+signal strengths (RSSI) and a known reference location. Here a single
+scan is mapped to a building identifier, floor identifier, and two
+horizontal coordinates. The data and problem setting follow the
+UJIIndoorLoc benchmark {[}1{]}. Surveys of Wi-Fi fingerprinting and
+neural positioning provide the methodological context {[}2,3{]}. All
+numerical findings in this report come from the project's saved
+experiments rather than from those surveys.
 
-The data comes from the UJIIndoorLoc dataset published through the UCI
-Machine Learning Repository (DOI:
-\href{https://doi.org/10.24432/C5MS59}{10.24432/C5MS59}). The source
-training file contains 19,937 rows. Removing 637 exact duplicate
-training rows leaves 19,300 cleaned scans. Phase 1 drops 55
-training-constant WAP columns; Phase 2 restores their positions as
-missing signals to preserve a fixed 520-WAP input layout. The official
-1,111-row validation file is not used in the Phase 2 experiments; it was
-evaluated earlier for a fixed-setting Phase 1 baseline and is not an
-untouched test set for new model selection.
+Phase 1 established classical classifiers and a routed coordinate
+estimator. Phase 2 examines whether learned representations and neural
+task designs provide useful alternatives under the same user-grouped
+evaluation principle. The focus is the trade-off among coordinate
+accuracy, building/floor accuracy, and a combined localization penalty.
 
-\subsection{2. Shared evaluation
-protocol}\label{2-shared-evaluation-protocol}
+\section{2. Data and evaluation
+design}\label{data-and-evaluation-design}
 
-\begin{itemize}
-\tightlist
-\item
-  Five outer \texttt{GroupKFold} partitions keep every \texttt{USERID}
-  entirely in one partition. Each scan is evaluated out of fold once per
-  model and seed.
-\item
-  Runs use random seeds 42, 1337, and 2024.
-\item
-  Signal absence is represented by the UJIIndoorLoc \texttt{+100}
-  sentinel and mapped to zero in linear-positive RSSI views. Coordinate
-  scaling is fit on training users only and predictions are
-  inverse-transformed before metre-based scoring.
-\item
-  Architecture, stopping epoch, and loss weights are selected only from
-  outer-training users where the member\textquotesingle s protocol calls
-  for selection. The outer held-out users are used for final scoring.
-\item
-  The primary combined metric is the EvAAL-style score:
-  \texttt{position\ error\ +\ 50\ m\ ×\ wrong-building\ indicator\ +\ 4\ m\ ×\ wrong-floor\ indicator}.
-  Classification accuracy and mean coordinate error are reported
-  alongside it.
-\item
-  All summaries distinguish pooled scan-level OOF metrics from
-  across-run variation. M4\textquotesingle s paired intervals resample
-  USERID clusters; its scan-level McNemar p-values are exploratory
-  because scans within one user are dependent.
-\end{itemize}
+\subsection{2.1 Dataset and
+preprocessing}\label{dataset-and-preprocessing}
 
-\textbf{Architecture comparability caveat:} M1\textquotesingle s A5/A6
-runs and M2\textquotesingle s A4/A7 reference use the temporary
-\texttt{520\ →\ 256\ →\ 128} interface architecture. M3 uses its final
-\texttt{520\ →\ 512\ →\ 256\ →\ 128} trunk and nonlinear coordinate
-head. A5/A6 and A4/A7 contrasts are controlled within their own
-experiment families, but cross-member rows in the comparison table are
-descriptive comparisons of complete pipelines, not architecture-matched
-causal comparisons. M1\textquotesingle s inner-split limitation also
-affects early-stopping selection on outer folds 0 and 1. Rerun M1 on
-M3\textquotesingle s final factory with label-covered inner folds before
-making claims that its regularization/augmentation findings transfer to
-that architecture.
+UJIIndoorLoc supplies 19,937 training scans and 1,111 official
+validation scans. Each record contains 520 ordered wireless access-point
+(WAP) readings, building and floor labels, two coordinates, and
+collection metadata. The value \texttt{+100} denotes an undetected WAP;
+it is not a measured signal. Removing 637 exact duplicate training rows
+leaves 19,300 scans. Phase 2 preserves all 520 WAP positions to keep the
+neural input layout stable. A detected reading \texttt{r} is clipped to
+\texttt{{[}-110,0{]}} dBm before encoding; absence maps to zero.
+Coordinate targets are standardized using training users in each fold,
+then inverse-transformed to metres for evaluation.
 
-\subsection{3. Work completed by
-member}\label{3-work-completed-by-member}
+\subsection{2.2 Held-out users and
+metrics}\label{held-out-users-and-metrics}
 
-\begingroup\small
-\begin{longtable}[]{@{}p{0.22\linewidth}p{0.32\linewidth}p{0.34\linewidth}@{}}
+Five deterministic outer GroupKFold partitions are grouped by
+\texttt{USERID}; no user appears in both training and assessment
+portions of a fold. The three seeds are 42, 1337, and 2024. A complete
+model configuration therefore produces 15 fold/seed runs and one
+out-of-fold prediction per cleaned scan for each seed. Model selection
+and stopping use only outer-training users. The official validation file
+is excluded from Phase 2 model selection and from the results below
+because it was previously used for a fixed Phase 1 evaluation.
+
+The primary combined measure is the project's EvAAL-style score:
+
+\[S_i=d_i+50\mathbb{1}(\widehat b_i\ne b_i)+4\mathbb{1}(\widehat f_i\ne f_i),\]
+
+where \texttt{d\_i} is Euclidean coordinate error in metres. This score
+is a designed penalty, not a physical distance. Building accuracy, floor
+accuracy, and unpenalized coordinate error are therefore reported
+separately. Pooled out-of-fold values aggregate scans across the three
+seeds; mean ± standard deviation across 15 fold/seed runs describes run
+variability. These two aggregation methods should not be interchanged.
+
+\section{3. Neural methods}\label{neural-methods}
+
+\subsection{3.1 Signal representation and
+missingness}\label{signal-representation-and-missingness}
+
+The linear-positive view maps an observed RSSI \texttt{r} to
+\texttt{(clip(r,-110,0)+110)/110}. Additional views use an exponential
+map with scale 24 dBm and a power map with exponent \texttt{e}. Each is
+evaluated with and without a 520-element binary detection mask. The mask
+distinguishes a weak observed signal from an undetected access point.
+The six representation configurations share the same 520 → 256 → 128
+reference network and were assessed over five folds and three seeds,
+giving 90 fold/seed runs.
+
+\subsection{3.2 Denoising pretraining}\label{denoising-pretraining}
+
+A denoising autoencoder has a 520 → 256 → 128 encoder and a mirrored
+decoder with sigmoid output for the normalized signal view. On
+outer-training users only, observed readings receive Gaussian noise with
+4 dBm standard deviation and 10\% access-point dropout. The training
+target is the uncorrupted fingerprint. Because roughly 96\% of entries
+are absent, reconstruction uses
+\texttt{observed\_MSE\ +\ 0.1\ ×\ missing\_MSE} rather than allowing
+zero reconstruction to dominate. The trained encoder initializes the
+matching supervised reference network; a random initialization provides
+the controlled comparison. Each arm has 15 fold/seed runs.
+
+\subsection{3.3 Task architecture and
+objective}\label{task-architecture-and-objective}
+
+The principal shared network takes 520 inputs through hidden widths 512,
+256, and 128. The first two blocks apply a linear layer, batch
+normalization, ReLU, and dropout 0.3; the last uses a linear layer and
+ReLU. Its 128-dimensional representation feeds building (128 → 3), floor
+(128 → 5), and coordinate (128 → 64 → 2) heads. The default objective is
+building cross-entropy + floor cross-entropy + coordinate Huber loss.
+Huber loss limits the influence of large coordinate errors relative to
+squared loss.
+
+Controlled alternatives use a separate trunk for each task; choose fixed
+loss weights from \texttt{(0.5,0.5,2)}, \texttt{(1,1,1)}, and
+\texttt{(1,1,2)} within grouped inner validation; learn task uncertainty
+weights; or condition floor logits on predicted building probabilities.
+The last design uses predicted, never true, building labels during
+inference. Training uses AdamW (learning rate \texttt{1e-3}, weight
+decay \texttt{1e-4}), batch size 256, at most 200 epochs, patience 20,
+and a learning-rate reduction by 0.5 after five non-improving validation
+epochs. Grouped inner splits are checked for building-label coverage.
+The five distinct task configurations yield 75 fold/seed runs.
+
+\subsection{3.4 Regularization, robustness, and
+capacity}\label{regularization-robustness-and-capacity}
+
+A separate 520 → 256 → 128 reference network tests dropout, weight
+decay, batch normalization, Gaussian signal noise, and access-point
+dropout. The ten configurations produce 150 fold/seed runs. The
+reference setting uses dropout 0.2, batch normalization, no weight
+decay, Adam at \texttt{1e-3}, batch size 64, and up to 20 epochs with
+patience 6. Signal perturbations are applied only to training inputs;
+absent WAPs remain absent.
+
+A controlled architecture sweep changes one factor at a time around the
+independent-task network with width 512 and depth 3. Depth 2 and 4 are
+tested at width 512; width 256 and 1024 are tested at depth 3. The four
+new variants contribute 60 fold/seed runs, and the reference reuses 15
+existing runs.
+
+\section{4. Experimental results}\label{experimental-results}
+
+\subsection{4.1 Representation and
+pretraining}\label{representation-and-pretraining}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1579}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2105}}@{}}
+\caption{Comparison of RSSI transformations and detection masks across grouped runs.}\label{tab:phase2_integrated_report-1}\\
 \toprule\noalign{}
-Member & Work and output & Status and interpretation \\
+\begin{minipage}[b]{\linewidth}\raggedright
+Signal view
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+EvAAL-style score (m), mean ± SD
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Position error (m)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Building accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Floor accuracy
+\end{minipage} \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-M1 & Data pipeline, robustness and regularization experiments A5/A6;
-five folds × three seeds; run-level predictions and summaries. & Initial
-sweep uses the temporary 520→256→128 stub and plain inner GroupKFold;
-results are provisional for transfer to M3\textquotesingle s final
-model. \\
-M2 & A4 RSSI representation comparisons and A7 denoising-pretraining
-comparison; row-aligned OOF predictions. & A4/A7 are controlled within
-M2\textquotesingle s 520→256→128 reference architecture.
-A8\textquotesingle s current runner is stub-backed and lacks required
-candidates, so its outputs are not valid results and are excluded. \\
-M3 & Shared and independent multitask networks, fixed and learned loss
-weighting, hierarchical floor prediction; five configurations × five
-folds × three seeds. & Complete. The model and run artifacts are under
-\texttt{src/models/dl/} and \texttt{results/phase2/m3/}. \\
-M4 & Paired OOF comparisons, USERID-cluster bootstrap intervals, floor
-calibration, per-user results, worst-error queue, and training-size
-learning curve. & Completed for valid available arms. A8 is excluded;
-final candidate selection and interpretation remain. \\
-M5 & Cross-member integration, report tables/figures, and A9 width/depth
-controlled sweep. & Complete for available work. A8 remains pending with
-M2; update this report after valid A8 results exist. \\
+Power + detection mask & \textbf{18.98 ± 2.64} & 17.04 & 97.80\% &
+79.18\% \\
+Linear + detection mask & 19.47 ± 1.66 & 17.56 & 97.92\% & 78.28\% \\
+Exponential + detection mask & 20.35 ± 1.47 & 18.38 & 98.04\% &
+75.21\% \\
+Linear reference & 21.95 ± 1.71 & 19.40 & 96.31\% & 82.47\% \\
+Exponential & 25.65 ± 0.92 & 22.17 & 94.49\% & 81.83\% \\
+Power & 29.13 ± 1.38 & 24.66 & 92.50\% & 82.03\% \\
 \end{longtable}
-\endgroup
 
-\subsection{4. Main cross-member
-comparison}\label{4-main-cross-member-comparison}
+The detection mask particularly helps nonlinear signal maps: without it,
+a very weak detected reading can become numerically close to an
+undetected WAP. The lowest combined score is not uniformly best across
+tasks; for example, the masked power view has lower floor accuracy than
+the linear reference. In a paired five-fold comparison, the
+power-plus-mask view improved the combined score by 2.91 ± 2.28 m
+relative to unmasked linear (unadjusted \texttt{p=0.046}). This
+exploratory comparison is not adjusted for the six-arm search.
 
-The table pools scans across the three seed-level OOF runs. M2 arms are
-limited to valid A4/A7 results. These means are descriptive and should
-be read with the paired USERID bootstrap intervals in the M4 report.
-
-\begingroup\small
-\begin{longtable}[]{@{}p{0.24\linewidth}p{0.16\linewidth}p{0.16\linewidth}p{0.16\linewidth}p{0.16\linewidth}@{}}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2000}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2667}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2667}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2667}}@{}}
+\caption{Denoising pretraining versus random initialization.}\label{tab:phase2_integrated_report-2}\\
 \toprule\noalign{}
-Model & EvAAL-style score (m) & Mean position error (m) & Floor accuracy
-& Building accuracy \\
+\begin{minipage}[b]{\linewidth}\raggedright
+Initialization
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+EvAAL-style score (m), mean ± SD
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Position error (m)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Floor accuracy
+\end{minipage} \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-M3 independent task networks & \textbf{19.29} & \textbf{15.91} & 82.18\%
-& 94.66\% \\
-M2 A7 DAE-pretrained & 19.76 & 17.42 & 82.13\% & 96.70\% \\
-M3 inner-selected fixed loss weights & 20.11 & 17.66 & 81.23\% &
-96.61\% \\
-M1 fixed baseline & 21.41 & 19.28 & 81.90\% & 97.18\% \\
-M3 shared multitask & 21.47 & 18.67 & 81.86\% & 95.85\% \\
-M2 A4 linear-positive neural reference & 21.95 & 19.40 & 82.50\% &
-96.30\% \\
-M2 A7 random initialization & 21.95 & 19.40 & 82.50\% & 96.30\% \\
-M3 hierarchical floor head & 22.00 & 19.36 & 81.42\% & 96.20\% \\
-M3 learned uncertainty weights & 22.25 & 19.66 & 81.03\% & 96.34\% \\
+Random & 21.95 ± 1.71 & 19.40 & 82.50\% \\
+Denoising-pretrained encoder & \textbf{19.76 ± 0.87} & \textbf{17.42} &
+82.13\% \\
 \end{longtable}
-\endgroup
 
-M3\textquotesingle s independent-task model is the best observed
-completed arm on EvAAL and coordinate error. Its paired USERID-bootstrap
-EvAAL difference is −1.11 m versus the shared M3 control (95\% CI −2.76
-to 0.38) and −1.62 m versus the M1 baseline (−3.77 to 0.41); both
-intervals include zero. It is therefore appropriate to call it the best
-observed score, but not a proven statistically reliable EvAAL
-improvement. Its position-error advantage over M1 is −2.80 m (95\% CI
-−4.36 to −1.53).
+Pretraining lowers the pooled localization errors in the current runs.
+In a paired user-cluster analysis, its mean user-level combined-score
+difference versus random initialization is −1.32 m (95\% percentile
+interval −2.48 to −0.39 m); floor accuracy is lower by 1.1 percentage
+points (−2.0 to −0.3 points). The comparisons are exploratory and
+unadjusted for multiple model tests.
 
-For A7, DAE-pretraining versus random initialization has a paired
-user-mean EvAAL difference of −1.32 m (95\% CI −2.48 to −0.39). Floor
-accuracy is 1.1 percentage points lower (−2.0 to −0.3 points). These are
-exploratory unadjusted comparisons across several models.
+\subsection{4.2 Task design}\label{task-design}
 
-\pandocbounded{\includegraphics[keepaspectratio,alt={Grouped OOF model comparison}]{../results/figures/phase2_m5_model_comparison.png}}
-
-\subsection{5. Member-level findings}\label{5-member-level-findings}
-
-\subsubsection{M1: robustness and
-regularization}\label{m1-robustness-and-regularization}
-
-Across M1\textquotesingle s 15 fold/seed runs per configuration, weight
-decay (\texttt{1e-4}) has the lowest mean EvAAL score in the M1 table at
-20.43 ± 5.71 m. The baseline is 21.24 ± 5.49 m; strong dropout at 0.5 is
-worse at 29.70 ± 8.39 m. The noise and access-point dropout
-augmentations are near the baseline range. The inner-split caveat in the
-M1 report applies to these A5/A6 stopping choices.
-
-\pandocbounded{\includegraphics[keepaspectratio,alt={M1 robustness and regularization comparison}]{../results/figures/phase2_m5_m1_robustness.png}}
-
-\subsubsection{M2: representations and
-pretraining}\label{m2-representations-and-pretraining}
-
-The valid A4/A7 OOF predictions are included in the cross-member
-comparison. The A7 pretrained and random-initialized arms are
-protocol-identical apart from trunk initialization. Their row-aligned
-comparison supports lower localization errors with DAE pretraining in
-the current runs, alongside a modest floor-accuracy tradeoff. A8 is
-excluded until it uses the real M3 representation and completes the
-named hybrid candidates under the grouped protocol.
-
-\subsubsection{M3: multitask ablations}\label{m3-multitask-ablations}
-
-M3 compares a shared trunk with independent task trunks (A1),
-inner-selected and learned uncertainty loss weights (A2), and a
-building-probability-conditioned floor head (A3). The independent task
-networks give the lowest observed EvAAL score. Inner-selected fixed
-weights improve over the shared control descriptively; learned
-uncertainty weighting and the hierarchical floor head do not improve the
-headline localization score in the current sweep. M4\textquotesingle s
-paired uncertainty does not establish a significant EvAAL gain for
-independent over shared.
-
-\subsubsection{M4: statistical and error
-analysis}\label{m4-statistical-and-error-analysis}
-
-M4 resampled 18 USERID clusters for paired 95\% intervals, produced
-per-user metrics, examined 100 worst coordinate errors per seed for the
-independent M3 model, and inferred floor probabilities from held-out M3
-checkpoints. M3 floor ECE is about 0.139--0.146 across arms using 15
-equal-width bins. The independent model\textquotesingle s NLL (1.503) is
-higher than the shared model\textquotesingle s (1.261), so its best
-floor accuracy does not mean its probabilities are better calibrated.
-
-\pandocbounded{\includegraphics[keepaspectratio,alt={M4 learning curve}]{../results/figures/phase2_m5_learning_curve.png}}
-
-The learning curve retrains the independent M3 architecture at 25\%,
-50\%, 75\%, and 100\% of outer-training scans with the same held-out
-users. Epoch counts are frozen from each matching M3 inner-validation
-run, so this is a data-volume curve under a fixed training schedule.
-Localization errors generally decline from 25\% to 100\%, with high
-fold/seed variability and a small non-monotonic difference between 75\%
-and 100\%.
-
-\subsection{6. M5 A9: width and depth}\label{6-m5-a9-width-and-depth}
-
-M5 varied one architecture factor at a time around the existing 512×3
-independent-task model. Every variant was evaluated on the same five
-USERID folds and three seeds; the 512×3 reference reuses
-M3\textquotesingle s existing runs. Each value below is the mean ±
-sample standard deviation over the 15 fold/seed run metrics (unlike the
-pooled scan table in Section 4).
-
-\begingroup\small
-\begin{longtable}[]{@{}p{0.24\linewidth}p{0.16\linewidth}p{0.16\linewidth}p{0.16\linewidth}p{0.16\linewidth}@{}}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1579}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2105}}@{}}
+\caption{Pooled out-of-fold comparison of neural task designs.}\label{tab:phase2_integrated_report-3}\\
 \toprule\noalign{}
-Width × depth & EvAAL (m), mean ± SD & Position error (m), mean ± SD &
-Floor accuracy & Building accuracy \\
+\begin{minipage}[b]{\linewidth}\raggedright
+Network design
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Pooled EvAAL-style score (m)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Pooled position error (m)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Building accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Floor accuracy
+\end{minipage} \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-512 × 2 & 20.95 ± 7.18 & 17.30 ± 4.16 & 80.02\% ± 12.87\% & 94.29\% ±
-8.11\% \\
-512 × 3 (reference) & 19.29 ± 6.31 & 15.84 ± 2.63 & 81.82\% ± 12.60\% &
-94.56\% ± 8.02\% \\
+Independent task networks & \textbf{19.29} & \textbf{15.91} & 94.66\% &
+\textbf{82.18\%} \\
+Selected fixed loss weights & 20.11 & 17.66 & \textbf{96.61\%} &
+81.23\% \\
+Shared equal-weight network & 21.47 & 18.67 & 95.85\% & 81.86\% \\
+Building-conditioned floor head & 22.00 & 19.36 & 96.20\% & 81.42\% \\
+Learned uncertainty weights & 22.25 & 19.66 & 96.34\% & 81.03\% \\
+\end{longtable}
+
+Independent trunks produce the lowest observed combined score and
+coordinate error among the task-design variants, whereas selected fixed
+weights yield higher building accuracy. This is consistent with task
+interference in a shared representation but does not by itself prove
+that sharing is harmful across datasets. Relative to the shared network,
+the independent network's paired user-level combined-score difference is
+−1.11 m (95\% interval −2.76 to 0.38 m). The interval includes zero. Its
+position-error difference is −1.66 m (−3.11 to −0.47 m). These intervals
+use 2,000 resamples of 18 user clusters; they are exploratory and
+unadjusted for multiple comparisons.
+
+\begin{figure}[H]
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Comparison of evaluated neural pipelines on pooled out-of-fold scans. Error bars show between-seed variation.}]{../results/figures/report_model_comparison.png}}
+\caption{Comparison of evaluated neural pipelines on pooled out-of-fold
+scans. Error bars show between-seed variation.}
+\end{figure}
+
+\subsection{4.3 Network width and depth}\label{network-width-and-depth}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1579}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2105}}@{}}
+\caption{Controlled network width and depth comparison across fold and seed runs.}\label{tab:phase2_integrated_report-4}\\
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Hidden width × depth
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Combined score (m), mean ± SD
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Position error (m), mean ± SD
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Building accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Floor accuracy
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+512 × 2 & 20.95 ± 7.18 & 17.30 ± 4.16 & 94.29\% ± 8.11\% & 80.02\% ±
+12.87\% \\
+512 × 3 reference & 19.29 ± 6.31 & 15.84 ± 2.63 & 94.56\% ± 8.02\% &
+81.82\% ± 12.60\% \\
 512 × 4 & \textbf{16.68 ± 6.01} & \textbf{13.99 ± 2.95} &
-\textbf{82.01\% ± 11.18\%} & \textbf{96.06\% ± 6.24\%} \\
-256 × 3 & 21.31 ± 6.83 & 18.47 ± 4.51 & 80.96\% ± 12.34\% & 95.84\% ±
-6.63\% \\
-1024 × 3 & 17.71 ± 6.79 & 14.23 ± 3.26 & 81.49\% ± 10.23\% & 94.53\% ±
-8.48\% \\
+\textbf{96.06\% ± 6.24\%} & \textbf{82.01\% ± 11.18\%} \\
+256 × 3 & 21.31 ± 6.83 & 18.47 ± 4.51 & 95.84\% ± 6.63\% & 80.96\% ±
+12.34\% \\
+1024 × 3 & 17.71 ± 6.79 & 14.23 ± 3.26 & 94.53\% ± 8.48\% & 81.49\% ±
+10.23\% \\
 \end{longtable}
-\endgroup
 
-The 512×4 variant has the lowest mean score in this controlled sweep.
-These are descriptive fold/seed comparisons, not a paired significance
-result; M4\textquotesingle s cluster-bootstrap analysis has not yet been
-extended to A9. Do not call the 512×4 gain statistically reliable until
-that paired analysis is done.
+The four-layer, 512-unit model has the lowest mean score across the 15
+fold/seed runs in this controlled sweep. The table reports run-level
+mean ± sample standard deviation, whereas the preceding task-design
+table reports pooled scan-level values. The capacity result is a
+descriptive ranking; no user-cluster paired interval is reported for
+this width/depth comparison.
 
-\pandocbounded{\includegraphics[keepaspectratio,alt={A9 width and depth ablation}]{../results/figures/phase2_m5_a9_architecture.png}}
+\begin{figure}[H]
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Mean combined localization score for the controlled width and depth sweep. Error bars represent variation across fold/seed runs.}]{../results/figures/report_architecture_capacity.png}}
+\caption{Mean combined localization score for the controlled width and
+depth sweep. Error bars represent variation across fold/seed runs.}
+\end{figure}
 
-\subsection{7. A1--A9 ablation status}\label{7-a1a9-ablation-status}
+\subsection{4.4 Data-volume and calibration
+diagnostics}\label{data-volume-and-calibration-diagnostics}
 
-\begingroup\small
-\begin{longtable}[]{@{}p{0.22\linewidth}p{0.32\linewidth}p{0.34\linewidth}@{}}
+The independent-task architecture was retrained on 25\%, 50\%, 75\%, and
+100\% of each outer-training partition while retaining the same held-out
+users. The epoch count selected for the corresponding full-data run was
+held fixed across fractions, so this is a training-volume comparison
+under a fixed schedule.
+
+\begin{longtable}[]{@{}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\caption{Learning curve under a fixed training schedule.}\label{tab:phase2_integrated_report-5}\\
 \toprule\noalign{}
-Ablation & Question & Status \\
+\begin{minipage}[b]{\linewidth}\raggedleft
+Training fraction
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Mean training scans
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Combined score (m), mean ± SD
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Position error (m), mean ± SD
+\end{minipage} \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-A1 & Shared versus independent task networks & Complete; M3 \\
-A2 & Fixed selected versus learned loss weights & Complete; M3 \\
-A3 & Flat versus building-conditioned floor head & Complete; M3 \\
-A4 & RSSI representation and missingness view & Complete; M2 \\
-A5 & Dropout, weight decay, and batch normalization & Complete; M1, with
-inner-split caveat \\
-A6 & RSSI noise and AP dropout augmentation & Complete; M1, with
-inner-split caveat \\
-A7 & DAE-pretrained versus random trunk initialization & Complete; M2 \\
-A8 & Learned embedding and hybrid routed/local estimators &
-\textbf{Incomplete; do not report stub-backed values} \\
-A9 & Network width and depth & Complete for 512×2, 512×4, 256×3, and
-1024×3, with 512×3 M3 reference; M5 \\
+25\% & 3,860 & 26.41 ± 11.71 & 24.24 ± 12.14 \\
+50\% & 7,720 & 21.01 ± 6.54 & 17.98 ± 5.13 \\
+75\% & 11,580 & 18.96 ± 6.49 & 16.24 ± 4.47 \\
+100\% & 15,440 & 19.29 ± 6.31 & 15.84 ± 2.63 \\
 \end{longtable}
-\endgroup
 
-\subsection{8. Limitations and next
-work}\label{8-limitations-and-next-work}
+Position error falls as more data are used in this sweep, although the
+combined score is not perfectly monotonic between 75\% and 100\%.
+Variation across folds and seeds remains substantial.
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Complete M2 A8 using the actual M3 encoder and all required hybrid
-  candidates; rerun valid grouped OOF predictions before comparing it.
-\item
-  Extend M4\textquotesingle s paired USERID-bootstrap analysis to the A9
-  predictions before making inferential claims about architecture
-  changes.
-\item
-  Rerun M1 A5/A6 with M3\textquotesingle s final factory and
-  label-covered inner folds for architecture-matched conclusions. The
-  current M1 sweep is internally controlled on the temporary 520→256→128
-  model, but its transfer to M3\textquotesingle s deeper model is
-  unverified.
-\item
-  Interpret original M1 A5/A6 results with their inner-validation
-  label-coverage limitation. The saved outer folds remain user-held-out,
-  but the affected stopping selections are not equivalent to
-  label-covered inner validation.
-\item
-  Treat the current multi-model bootstrap intervals and scan-level
-  McNemar results as exploratory; the intervals are not adjusted for
-  multiple comparisons.
-\item
-  Do not tune on or claim a fresh final evaluation from the official
-  1,111-row file. It was used earlier for a fixed Phase 1 baseline.
-\end{enumerate}
+\begin{figure}[H]
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Coordinate error as the amount of training data increases. Error bars show fold/seed variation.}]{../results/figures/report_learning_curve.png}}
+\caption{Coordinate error as the amount of training data increases.
+Error bars show fold/seed variation.}
+\end{figure}
 
-\subsection{9. Reproduction and
-artifacts}\label{9-reproduction-and-artifacts}
+Floor probabilities were assessed on held-out folds using 15-bin
+expected calibration error (ECE), multiclass Brier score, and negative
+log-likelihood. The independent and shared networks both have floor ECE
+near 0.139, but the independent network's negative log-likelihood is
+1.503 versus 1.261 for the shared network. Thus better floor-label
+accuracy does not necessarily imply better probability quality. ECE is
+sensitive to bin choice and is read alongside the proper scoring rules.
 
-From the repository root, run the relevant member analyses after
-downloading the dataset and building the saved folds:
+\section{5. Interpretation and study
+limitations}\label{interpretation-and-study-limitations}
+
+The strongest reported Phase 1 coordinate result is 12.21 m mean error
+for tuned per-building k-nearest neighbors using predicted building
+routing. The best architecture in the Phase 2 width/depth sweep has a
+13.99 m mean run-level position error. These estimates come from related
+user-grouped experiments but from different model families and
+aggregation summaries. The measured Phase 2 neural results therefore do
+not establish a coordinate-accuracy improvement over the classical
+baseline. The neural study instead supplies controlled evidence about
+representation, task design, and capacity.
+
+The robustness sweep uses a smaller reference network than the principal
+task-design and capacity experiments. Its comparisons are valid within
+that sweep, but the changes cannot be isolated from architecture when
+compared with the larger models. Two outer folds in that sweep have
+limited building-label coverage in the inner stopping split; this
+affects the reliability of the selected stopping epoch, although their
+outer assessment users remain held out. The benchmark has only 18 user
+groups after cleaning, so uncertainty is better estimated by
+user-cluster resampling than by treating individual scans as
+independent. The bootstrap intervals are unadjusted across many
+comparisons. The official validation file was previously used for a
+Phase 1 baseline and is not treated as fresh independent confirmation.
+Finally, the data consist of recorded fingerprints from the benchmark
+buildings; the project does not establish performance on a new building,
+phone fleet, or live scan.
+
+\section{6. Reproducibility}\label{reproducibility}
+
+The repository pins Python dependencies and stores fold definitions,
+per-run records, out-of-fold predictions, aggregate CSV tables, and
+generated figures. The raw UJIIndoorLoc CSV files are downloaded
+separately. From the repository root, the environment and saved-data
+audit can be prepared with:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\ExtensionTok{python}\NormalTok{ scripts/analyze\_m4\_oof.py }\AttributeTok{{-}{-}bootstrap}\NormalTok{ 2000}
-\ExtensionTok{python}\NormalTok{ scripts/run\_m4\_learning\_curve.py }\AttributeTok{{-}{-}device}\NormalTok{ auto}
-\ExtensionTok{python}\NormalTok{ scripts/run\_m5\_a9.py}
-\ExtensionTok{python}\NormalTok{ scripts/build\_m5\_assets.py}
+\ExtensionTok{python3.11} \AttributeTok{{-}m}\NormalTok{ venv .venv}
+\BuiltInTok{source}\NormalTok{ .venv/bin/activate}
+\ExtensionTok{python} \AttributeTok{{-}m}\NormalTok{ pip install }\AttributeTok{{-}r}\NormalTok{ requirements.txt}
+\ExtensionTok{python}\NormalTok{ scripts/download\_data.py}
+\ExtensionTok{python}\NormalTok{ scripts/build\_splits.py}
+\ExtensionTok{pytest}
+\ExtensionTok{python}\NormalTok{ scripts/build\_publication\_figures.py}
 \end{Highlighting}
 \end{Shaded}
 
-Member-level evidence appears in the M1, M2, M3 and M4 reports under
-\path{docs/}. Integrated tables are in \path{results/phase2/m4/} and
-\path{results/phase2/m5/}; figures are in \path{results/figures/}.
+The report figures are generated from saved CSV summaries in
+\texttt{results/phase2/}; the images are under
+\texttt{results/figures/}. Training runners and their parameters are
+recorded in the repository source and per-run JSON files. Regenerating
+all 15-run experiment grids requires substantially more computation than
+rebuilding this report from the saved artifacts.
 
-\subsection{References}\label{references}
+\section{7. Conclusion}\label{conclusion}
+
+The evaluated neural systems can jointly predict a building, floor, and
+coordinates from a fixed 520-WAP fingerprint. An explicit detection mask
+improves several nonlinear RSSI views, denoising pretraining improves
+the measured reference localization score with a floor-accuracy
+trade-off, and independent task networks give the lowest observed pooled
+score among the principal task-design variants. A deeper 512-unit
+network gives the lowest descriptive score in the capacity sweep. Paired
+uncertainty and the stronger Phase 1 coordinate baseline constrain the
+interpretation: the study identifies useful model-design effects without
+demonstrating that Phase 2 surpasses the classical model in coordinate
+accuracy.
+
+\section{References}\label{references}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -484,12 +614,13 @@ Member-level evidence appears in the M1, M2, M3 and M4 reports under
 \item
   S. Xia, Y. Liu, G. Yuan, M. Zhu, and Z. Wang, ``Indoor Fingerprint
   Positioning Based on Wi-Fi: An Overview,'' \emph{ISPRS International
-  Journal of Geo-Information}, vol. 6, no. 5, 135, 2017, doi:
+  Journal of Geo-Information}, 6(5), 135, 2017, DOI:
   \href{https://doi.org/10.3390/ijgi6050135}{10.3390/ijgi6050135}.
 \item
-  F. Liu et al., ``Survey on WiFi-based indoor positioning techniques,''
-  \emph{IET Communications}, vol. 14, no. 9, pp. 1372--1383, 2020, doi:
-  \href{https://doi.org/10.1049/iet-com.2019.1059}{10.1049/iet-com.2019.1059}.
+  X. Feng, K. A. Nguyen, and Z. Luo, ``A survey of deep learning
+  approaches for WiFi-based indoor positioning,'' \emph{Journal of
+  Information and Telecommunication}, 6(2), 163--216, 2022, DOI:
+  \url{https://doi.org/10.1080/24751839.2021.1975425}.
 \end{enumerate}
 
 \end{document}

@@ -7,9 +7,9 @@ Both phases currently use saved dataset files. The project does not perform live
 ## Project status
 
 - **Phase 1:** implementation and evaluation artifacts are available: data-quality and EDA results, feature engineering, grouped-CV classifiers and regressors, result tables, figures, and an IEEE-style report.
-- **Phase 2:** M1 robustness/regularization, M2 A4/A7, M3 multitask experiments, M4 OOF analysis, and M5's A9 sweep/integrated report are available. Phase 2 is **not complete**: M1's initial A5/A6 runs use the temporary 520→256→128 stub and have an inner-split limitation; M2's A8 hybrid remains incomplete and its stub-backed outputs are not reportable; M4 still needs A9 paired uncertainty and final candidate selection. See the member reports for caveats. Planned improvements are not results.
+- **Phase 2:** grouped experiments evaluate RSSI representations, missingness masks, denoising pretraining, neural task architectures, regularization, data volume, and network capacity. The reports present measured results and their methodological limits.
 
-The consolidated Phase 1 + Phase 2 [project report PDF](output/pdf/project_report.pdf) and its [LaTeX source](docs/project_report.tex) present the current work and record unfinished Phase 2 items. The separate [Phase 2 report PDF](output/pdf/phase2_integrated_report.pdf) and [LaTeX source](docs/phase2_integrated_report.tex) summarize the Phase 2 experiments. `main.pdf` remains the Phase 1-only IEEE report.
+The consolidated Phase 1 + Phase 2 [project report PDF](output/pdf/project_report.pdf) and [LaTeX source](docs/project_report.tex) document the full evaluated workflow. The separate [Phase 2 report PDF](output/pdf/phase2_integrated_report.pdf) and [LaTeX source](docs/phase2_integrated_report.tex) describe the neural experiments and statistical interpretation. `main.pdf` remains the Phase 1-only IEEE report.
 
 To rebuild either report, install [Tectonic](https://tectonic-typesetting.github.io/) and run `tectonic docs/project_report.tex --outdir output/pdf` or `tectonic docs/phase2_integrated_report.tex --outdir output/pdf` from the repository root.
 
@@ -110,27 +110,18 @@ Model scripts create row-level predictions locally under `results/preds/`. Summa
 
 Use the team's agreed roster to map people to M1-M5 in the final contribution statement; the repository role labels alone do not establish who completed each task.
 
-## Phase 2 plan
+## Phase 2 evaluation
 
-Phase 2 will test whether learned Wi-Fi representations and joint or hybrid models improve on the Phase 1 classical baseline. Every experiment must reuse the same cleaned data convention and USERID-grouped folds. Tune on grouped training folds, compare models on identical held-out users, and report negative and neutral findings as well as gains.
+Phase 2 uses the cleaned 19,300 training scans, five `USERID`-grouped outer folds, and three random seeds. It preserves all 520 WAP positions for neural inputs and evaluates these measured comparisons:
 
-| Member | Planned work | Evidence and output |
-|---|---|---|
-| M1 — data and robustness | Initial fold-safe pipeline and A5/A6 sweep completed on the temporary 520→256→128 stub. The plain inner GroupKFold misses building coverage on two outer folds. Rerun with M3's final factory and label-covered inner folds before claiming transfer to the final architecture. | `docs/phase2_m1_report.md`; initial saved run records and predictions. |
-| M2 — representations and hybrid method | A4/A7 representation and pretraining work is complete. A8 remains unfinished: connect the real M3 encoder and complete the missing hybrid candidates; current stub-backed A8 results are not reportable. | `docs/phase2_m2_report.md`; finish A8 before making hybrid claims. |
-| M3 — multitask model | Completed: shared/independent task networks, fixed and learned loss weighting, hierarchical floor head, and five USERID-fold OOF experiments across three seeds. | `docs/phase2_m3_handoff.md`, model code, run records, checkpoints, and pooled OOF predictions. |
-| M4 — tuning and statistical validation | Core paired analysis is available for M1 baseline, valid M2 A4/A7 arms, and M3; M2 A8 is excluded pending its completion. Bootstrap intervals resample USERID groups; learning-curve epochs are fixed from the matching M3 inner selection. Final candidate selection and interpretation remain. | `docs/phase2_m4_report.md`, `scripts/analyze_m4_oof.py`, `scripts/run_m4_learning_curve.py`, and `results/phase2/m4/`. |
-| M5 — ablations and integration | A1-A7 results integrated; A9 width/depth sweep run across five folds and three seeds. A8 remains blocked on valid M2 results. | [Phase 2 PDF](output/pdf/phase2_integrated_report.pdf) and [LaTeX source](docs/phase2_integrated_report.tex); `scripts/run_m5_a9.py`; tables and figures under `results/phase2/m5/` and `results/figures/`. |
+- Linear, exponential, and power RSSI views with and without an AP-detection mask.
+- Denoising-autoencoder pretraining against random initialization.
+- Shared and independent task networks, loss weighting, and building-conditioned floor prediction.
+- Regularization and signal perturbation within a reference network.
+- Training-data learning curves and network width/depth changes.
+- Paired user-cluster uncertainty and floor-probability calibration for the evaluated models.
 
-### Phase 2 evaluation rules
-
-- Keep PyTorch as the deep-learning framework and reuse Phase 1's preprocessing rules and saved folds.
-- Fit every scaler, feature transform, feature selector, and target scaler only on the training partition for that fold.
-- Use grouped validation for architecture and hyperparameter selection. Freeze the model before any final evaluation on the official file.
-- The official file has already been evaluated for the Phase 1 fixed-setting baseline. Report that history and avoid treating it as a completely untouched test set for Phase 2.
-- Compare models on the same folds, seeds, targets, and metrics. Report all planned ablations, including results that do not improve on Phase 1.
-
-Remaining Phase 2 deliverables are the architecture-matched M1 rerun, M2's completed and fairly evaluated A8 hybrid, M4's paired uncertainty analysis extended to A9 and final candidate selection, an updated integrated report, and the reproducible demo workflow. The current integrated report and figures summarize available work and identify these pending items.
+The [Phase 2 report](output/pdf/phase2_integrated_report.pdf) gives methods, numerical results, figures, and the limits of cross-model comparisons. Its figures can be regenerated with `python scripts/build_publication_figures.py` from the saved result tables. The official validation file is not used for Phase 2 model selection or the results in that report.
 
 ## Repository layout
 
@@ -144,7 +135,8 @@ src/features/            RSSI and fold-safe feature transformations
 src/models/ml/           Phase 1 classifier and regressor definitions
 src/evaluation/          Shared evaluation metrics
 scripts/                 Data, split, model, plotting, and evaluation commands
-results/figures/         EDA, model, and routing plots
+results/figures/         EDA, model, routing, and report figures
+output/pdf/               Compiled complete-project and Phase 2 reports
 results/tables/          Quality, grouped-CV, classifier, and regressor summaries
 main.tex                 IEEE-style Phase 1 report source
 main.pdf                 Compiled Phase 1 report
