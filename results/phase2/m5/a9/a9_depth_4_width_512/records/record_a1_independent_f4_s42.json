@@ -1,0 +1,122 @@
+{
+  "member": "M3",
+  "exp_id": "a1_independent",
+  "fold": 4,
+  "seed": 42,
+  "best_epoch": 3,
+  "inner_best_evaal": 33.30538446254247,
+  "selected_loss_weights": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "metrics": {
+    "n_samples": 3786,
+    "building_accuracy": 0.9896988906497622,
+    "floor_accuracy": 0.760433174854728,
+    "floor_accuracy_given_correct_building": 0.7632772884974647,
+    "mae_longitude": 9.169392710190504,
+    "mae_latitude": 7.044109878499736,
+    "mean_position_error": 12.64004447874128,
+    "median_position_error": 10.402613324173922,
+    "p75_position_error": 17.276301311772492,
+    "p95_position_error": 30.094375168553576,
+    "building_wrong_share": 0.010301109350237718,
+    "building_wrong_mean_position_error": 35.36630197803152,
+    "building_right_floor_wrong_share": 0.23428420496566296,
+    "building_right_floor_wrong_mean_position_error": 14.843932749423988,
+    "building_and_floor_right_share": 0.7554146856840993,
+    "building_and_floor_right_mean_position_error": 11.646627367353908,
+    "evaal_style_score": 14.113367246834255,
+    "building_macro_f1": 0.9891615351430914,
+    "floor_macro_f1": 0.7268067646638456
+  },
+  "inner_split": {
+    "method": "GroupKFold",
+    "n_splits": 4,
+    "train_users": [
+      1,
+      4,
+      5,
+      6,
+      8,
+      11,
+      12,
+      14
+    ],
+    "valid_users": [
+      3,
+      7,
+      16,
+      17,
+      18
+    ],
+    "train_rows": 11751,
+    "valid_rows": 3763,
+    "missing_buildings_from_inner_train": []
+  },
+  "candidate_inner_scores": [
+    {
+      "weights": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "score": 33.30538446254247,
+      "best_epoch": 3
+    }
+  ],
+  "config": {
+    "input_dim": 520,
+    "hidden_dims": [
+      512,
+      512,
+      512,
+      512
+    ],
+    "dropout": 0.3,
+    "batch_norm": true,
+    "independent_tasks": true,
+    "epochs": 200,
+    "patience": 20,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "batch_size": 256,
+    "device": "auto",
+    "seeds": [
+      42
+    ]
+  },
+  "outer_train_users": [
+    1,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    11,
+    12,
+    14,
+    16,
+    17,
+    18
+  ],
+  "outer_valid_users": [
+    2,
+    9,
+    10,
+    13,
+    15
+  ],
+  "software": {
+    "python": "3.13.6",
+    "torch": "2.13.0",
+    "sklearn": "1.6.1",
+    "device": "mps"
+  },
+  "parameter_count": 3210442,
+  "predictions_file": "results/phase2/m5/a9/a9_depth_4_width_512/preds/preds_a1_independent_f4_s42.csv",
+  "checkpoint_file": "results/phase2/m5/a9/a9_depth_4_width_512/checkpoints/model_a1_independent_f4_s42.pt",
+  "curves_file": "results/phase2/m5/a9/a9_depth_4_width_512/curves/curves_a1_independent_f4_s42.csv"
+}

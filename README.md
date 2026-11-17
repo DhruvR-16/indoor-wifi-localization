@@ -1,13 +1,15 @@
 # Indoor Wi-Fi Localization
 
-An offline machine-learning project that predicts a scan's building, floor, and indoor coordinates from Wi-Fi access-point signal fingerprints. Phase 1 establishes the classical ML baseline on UJIIndoorLoc. Phase 2 will test deep-learning and hybrid approaches against the same user-held-out baseline.
+An offline machine-learning project that predicts a scan's building, floor, and indoor coordinates from Wi-Fi access-point signal fingerprints. Phase 1 establishes the classical ML baseline on UJIIndoorLoc. Phase 2 evaluates deep-learning and hybrid approaches against the same user-held-out baseline.
 
-Phase 1 uses saved dataset files. It does not perform live Wi-Fi scanning, connect to a database service, or provide a deployed mobile application.
+Both phases currently use saved dataset files. The project does not perform live Wi-Fi scanning, connect to a live database, or provide a deployed mobile application.
 
 ## Project status
 
 - **Phase 1:** implementation and evaluation artifacts are available: data-quality and EDA results, feature engineering, grouped-CV classifiers and regressors, result tables, figures, and an IEEE-style report.
-- **Phase 2:** planned work is described below. Its models and results must be reported only after they have been implemented and evaluated; planned improvements are not results.
+- **Phase 2:** M1 robustness/regularization, M2 A4/A7, M3 multitask experiments, M4 OOF analysis, and M5's A9 sweep/integrated report are available. Phase 2 is **not complete**: M1's initial A5/A6 runs use the temporary 520→256→128 stub and have an inner-split limitation; M2's A8 hybrid remains incomplete and its stub-backed outputs are not reportable; M4 still needs A9 paired uncertainty and final candidate selection. See the member reports for caveats. Planned improvements are not results.
+
+The consolidated Phase 1 + Phase 2 project report is [`docs/project_report.md`](docs/project_report.md). It presents Phase 2 as current progress and records unfinished work; `main.pdf` remains the Phase 1-only IEEE report.
 
 ## Dataset
 
@@ -112,11 +114,11 @@ Phase 2 will test whether learned Wi-Fi representations and joint or hybrid mode
 
 | Member | Planned work | Evidence and output |
 |---|---|---|
-| M1 — data and robustness | Build a PyTorch `Dataset`/`DataLoader` that uses the Phase 1 feature convention. Test training-only RSSI noise augmentation at standard deviations of 2 and 4 dBm and AP dropout at 5% and 10%. Compare dropout, weight decay, batch normalization, and early stopping. | Reusable data pipeline; train/validation loss curves; robustness and regularization comparisons on grouped folds. |
-| M2 — hybrid method | Use the learned multitask representation as an embedding, then test kNN restricted by predicted building/floor. Compare against the multitask MLP, hierarchical MLP plus XGBoost, and stacking. | A hybrid comparison with a clear reasoned metric. Claim an improvement only if it is supported by held-out-user results. |
-| M3 — multitask model | Implement a shared MLP trunk with building, floor, and coordinate heads. Compare shared versus single-task models, loss weights, and a hierarchical floor head. | Model architecture, loss definitions, ablations, per-task metrics, and pooled OOF predictions. |
-| M4 — tuning and statistical validation | Tune within grouped training folds; evaluate final candidates across three seeds. Add paired bootstrap confidence intervals (1,000 resamples), a McNemar test for floor-classification comparisons, per-user summaries, a 25/50/75/100% learning curve, floor calibration/ECE, and worst-error review. | Reproducible tuning record, uncertainty and significance analysis, calibration, learning curves, and documented failure cases. |
-| M5 — ablations and integration | Coordinate A1-A9 controlled ablations, changing one factor at a time and using three seeds. Integrate all members' methods/results, limitations, and citations into the final report. | Ablation table with mean and standard deviation, complete report and comparison figures, and a record of neutral or negative results. |
+| M1 — data and robustness | Initial fold-safe pipeline and A5/A6 sweep completed on the temporary 520→256→128 stub. The plain inner GroupKFold misses building coverage on two outer folds. Rerun with M3's final factory and label-covered inner folds before claiming transfer to the final architecture. | `docs/phase2_m1_report.md`; initial saved run records and predictions. |
+| M2 — representations and hybrid method | A4/A7 representation and pretraining work is complete. A8 remains unfinished: connect the real M3 encoder and complete the missing hybrid candidates; current stub-backed A8 results are not reportable. | `docs/phase2_m2_report.md`; finish A8 before making hybrid claims. |
+| M3 — multitask model | Completed: shared/independent task networks, fixed and learned loss weighting, hierarchical floor head, and five USERID-fold OOF experiments across three seeds. | `docs/phase2_m3_handoff.md`, model code, run records, checkpoints, and pooled OOF predictions. |
+| M4 — tuning and statistical validation | Core paired analysis is available for M1 baseline, valid M2 A4/A7 arms, and M3; M2 A8 is excluded pending its completion. Bootstrap intervals resample USERID groups; learning-curve epochs are fixed from the matching M3 inner selection. Final candidate selection and interpretation remain. | `docs/phase2_m4_report.md`, `scripts/analyze_m4_oof.py`, `scripts/run_m4_learning_curve.py`, and `results/phase2/m4/`. |
+| M5 — ablations and integration | A1-A7 results integrated; A9 width/depth sweep run across five folds and three seeds. A8 remains blocked on valid M2 results. | `docs/phase2_integrated_report.md`; `scripts/run_m5_a9.py`; tables and figures under `results/phase2/m5/` and `results/figures/`. |
 
 ### Phase 2 evaluation rules
 
@@ -126,7 +128,7 @@ Phase 2 will test whether learned Wi-Fi representations and joint or hybrid mode
 - The official file has already been evaluated for the Phase 1 fixed-setting baseline. Report that history and avoid treating it as a completely untouched test set for Phase 2.
 - Compare models on the same folds, seeds, targets, and metrics. Report all planned ablations, including results that do not improve on Phase 1.
 
-Phase 2 deliverables are a trained multitask baseline, a tested hybrid candidate, robustness and ablation results, statistical validation, updated report and figures, and a reproducible evaluation/demo workflow. These are planned deliverables until the experiments have actually run.
+Remaining Phase 2 deliverables are the architecture-matched M1 rerun, M2's completed and fairly evaluated A8 hybrid, M4's paired uncertainty analysis extended to A9 and final candidate selection, an updated integrated report, and the reproducible demo workflow. The current integrated report and figures summarize available work and identify these pending items.
 
 ## Repository layout
 

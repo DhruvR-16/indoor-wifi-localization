@@ -1,0 +1,121 @@
+{
+  "member": "M3",
+  "exp_id": "a1_independent",
+  "fold": 2,
+  "seed": 2024,
+  "best_epoch": 15,
+  "inner_best_evaal": 21.70863986952351,
+  "selected_loss_weights": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "metrics": {
+    "n_samples": 3620,
+    "building_accuracy": 1.0,
+    "floor_accuracy": 0.881767955801105,
+    "floor_accuracy_given_correct_building": 0.881767955801105,
+    "mae_longitude": 12.996099819794544,
+    "mae_latitude": 8.582044198895028,
+    "mean_position_error": 16.856099689983832,
+    "median_position_error": 14.30537055209173,
+    "p75_position_error": 22.76861969063589,
+    "p95_position_error": 40.13230871580361,
+    "building_wrong_share": 0.0,
+    "building_wrong_mean_position_error": NaN,
+    "building_right_floor_wrong_share": 0.11823204419889503,
+    "building_right_floor_wrong_mean_position_error": 25.10884068685203,
+    "building_and_floor_right_share": 0.881767955801105,
+    "building_and_floor_right_mean_position_error": 15.749529155316043,
+    "evaal_style_score": 17.329027866779413,
+    "building_macro_f1": 1.0,
+    "floor_macro_f1": 0.8668069352256286
+  },
+  "inner_split": {
+    "method": "GroupKFold",
+    "n_splits": 4,
+    "train_users": [
+      1,
+      3,
+      4,
+      7,
+      8,
+      11,
+      16,
+      17,
+      18
+    ],
+    "valid_users": [
+      2,
+      9,
+      10,
+      13,
+      15
+    ],
+    "train_rows": 11894,
+    "valid_rows": 3786,
+    "missing_buildings_from_inner_train": []
+  },
+  "candidate_inner_scores": [
+    {
+      "weights": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "score": 21.70863986952351,
+      "best_epoch": 15
+    }
+  ],
+  "config": {
+    "input_dim": 520,
+    "hidden_dims": [
+      512,
+      512
+    ],
+    "dropout": 0.3,
+    "batch_norm": true,
+    "independent_tasks": true,
+    "epochs": 200,
+    "patience": 20,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "batch_size": 256,
+    "device": "auto",
+    "seeds": [
+      2024
+    ]
+  },
+  "outer_train_users": [
+    1,
+    2,
+    3,
+    4,
+    7,
+    8,
+    9,
+    10,
+    11,
+    13,
+    15,
+    16,
+    17,
+    18
+  ],
+  "outer_valid_users": [
+    5,
+    6,
+    12,
+    14
+  ],
+  "software": {
+    "python": "3.13.6",
+    "torch": "2.13.0",
+    "sklearn": "1.6.1",
+    "device": "mps"
+  },
+  "parameter_count": 1628362,
+  "predictions_file": "results/phase2/m5/a9/a9_depth_2_width_512/preds/preds_a1_independent_f2_s2024.csv",
+  "checkpoint_file": "results/phase2/m5/a9/a9_depth_2_width_512/checkpoints/model_a1_independent_f2_s2024.pt",
+  "curves_file": "results/phase2/m5/a9/a9_depth_2_width_512/curves/curves_a1_independent_f2_s2024.csv"
+}
